@@ -1,24 +1,38 @@
 {
-  "name": "solo-stacking-fe",
+  "name": "solo-stacking",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "eslint . --ext .ts,.tsx",
+    "lint:fix": "eslint . --ext .ts,.tsx --fix",
+    "format": "prettier --write .",
+    "outdated": "npm outdated",
+    "audit": "npm audit"
   },
   "dependencies": {
+    "@stacks/connect": "^7.7.1",
+    "@stacks/network": "^6.13.0",
+    "@stacks/stacking": "^6.15.0",
+    "axios": "^1.7.2",
     "react": "^18",
     "react-dom": "^18",
     "next": "14.2.4"
   },
   "devDependencies": {
-    "typescript": "^5",
-    "@types/node": "^20",
+    "@types/node": "^20.14.10",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@typescript-eslint/eslint-plugin": "^7.12.0",
+    "@typescript-eslint/parser": "^7.12.0",
     "eslint": "^8",
-    "eslint-config-next": "14.2.4"
+    "eslint-config-next": "14.2.4",
+    "eslint-plugin-react": "^7.34.2",
+    "eslint-config-prettier": "^8.10.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "prettier": "^2.8.8",
+    "typescript": "5.4.5"
   }
 }
