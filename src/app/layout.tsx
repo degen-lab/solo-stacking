@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Roboto } from "next/font/google";
+import AuthContextProvider from "./contexts/AuthContext";
+import { NavbarSoloStacking } from "./components/Navbar/Navbar";
 import "./globals.css";
+import { ThemeProvider } from "./contexts/ThemeContext";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Roboto({ subsets: ["latin"], weight: "400" });
 
 export const metadata: Metadata = {
   title: "Stacks Solo Stacking",
@@ -16,7 +19,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className={inter.className}>
+        <ThemeProvider>
+          <AuthContextProvider>
+            <div className="flex flex-col min-h-screen">
+              <NavbarSoloStacking />
+              <main className="flex-grow">{children}</main>
+            </div>
+          </AuthContextProvider>
+        </ThemeProvider>
+      </body>
     </html>
   );
 }
