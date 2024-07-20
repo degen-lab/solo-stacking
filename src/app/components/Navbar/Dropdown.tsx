@@ -9,7 +9,7 @@ import {
 } from "@nextui-org/react";
 import { useContext, useEffect, useState } from "react";
 import Image from "next/image";
-import { useTheme } from "@/app/contexts/ThemeContext";
+import { useTheme } from "next-themes";
 import { ThemeSwitch } from "./ThemeSwitch";
 
 export const HamburgerDropdown = () => {
@@ -30,6 +30,7 @@ export const HamburgerDropdown = () => {
         <Image
           src="/hamburger.png"
           className={render && theme === "dark" ? "invert" : "invert-0"}
+          style={{ cursor: "pointer" }}
           alt="hamburger"
           width={30}
           height={30}

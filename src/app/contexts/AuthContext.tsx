@@ -2,7 +2,7 @@
 import { AppConfig, showConnect, UserSession } from "@stacks/connect";
 import { createContext, ReactNode } from "react";
 
-export type Network = "mainnet" | "nakamoto" | "testnet";
+export type Network = "mainnet" | "nakamoto-testnet" | "testnet";
 
 interface UserInterface {
   stxAddress: {
@@ -28,7 +28,10 @@ interface UserInterface {
 interface AuthContextInterface {
   user?: UserInterface | null;
   network: Network;
+  btcNetwork: "mainnet" | "testnet";
   userSession: UserSession;
+  stxAddress: string | null;
+  btcAddress: string | null;
   isAuthenticated: () => boolean;
   login: () => void;
   logout: () => void;
@@ -54,6 +57,20 @@ const AuthContextProvider: React.FC<{
       }
     : null;
 
+  const stxAddress = user
+    ? user.stxAddress[network === "nakamoto-testnet" ? "testnet" : network]
+    : null;
+
+  const btcAddress = user
+    ? user.btcAddress.p2wpkh[
+        network === "nakamoto-testnet" ? "testnet" : network
+      ]
+    : null;
+
+  // FIXME: Currently all Stacks networks work with the mainnet Bitcoin network.
+  // However, Leather wallet won't let you pick the correct Bitcoin network.
+  const btcNetwork = network === "mainnet" ? "mainnet" : "testnet";
+
   const login = () => {
     showConnect({
       appDetails: {
@@ -74,7 +91,17 @@ const AuthContextProvider: React.FC<{
 
   return (
     <AuthContext.Provider
-      value={{ user, userSession, network, isAuthenticated, login, logout }}
+      value={{
+        user,
+        userSession,
+        network,
+        btcNetwork,
+        stxAddress,
+        btcAddress,
+        isAuthenticated,
+        login,
+        logout,
+      }}
     >
       {children}
     </AuthContext.Provider>

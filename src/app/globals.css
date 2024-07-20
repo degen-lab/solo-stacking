@@ -22,7 +22,7 @@ body {
   padding: 0;
   height: 100%; /* Ensure full height */
   width: 100%; /* Ensure full width */
-  overflow: hidden; /* Prevent horizontal scroll */
+  /* overflow: hidden; Prevent horizontal scroll */
 }
 
 /* body {

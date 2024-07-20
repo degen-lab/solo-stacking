@@ -5,6 +5,7 @@ import { Button } from "@nextui-org/button";
 import { getShortAddress } from "../../utils";
 import { useMediaQuery } from "react-responsive";
 import Link from "next/link";
+import { useTheme } from "next-themes";
 
 export const UserAvatar = () => {
   const { login, isAuthenticated } = useContext(AuthContext);
@@ -46,23 +47,32 @@ export const UserAvatar = () => {
 
 export const UserAvatarSTXAddress = () => {
   const { isAuthenticated, user, network } = useContext(AuthContext);
+  const { theme } = useTheme();
   return (
     <div>
       {isAuthenticated() && user ? (
         <div
-          className="rounded-xl border-2 p-2 bg-[#F5F5F5] border-[#F5F5F5]"
+          className={
+            theme === "light"
+              ? "rounded-xl border-2 p-2 bg-[#F5F5F5] border-[#F5F5F5]"
+              : "rounded-xl border-2 p-2 bg-[#3F3F3F] border-[#3F3F3F]"
+          }
           style={{ cursor: "pointer" }}
         >
           <Link
             // TODO: modularize this link
             href={`https://explorer.hiro.so/address/${
-              user?.stxAddress[network === "nakamoto" ? "testnet" : network]
+              user?.stxAddress[
+                network === "nakamoto-testnet" ? "testnet" : network
+              ]
             }?chain=mainnet`}
             target="new"
           >
             <p className="text-black">
               {getShortAddress(
-                user?.stxAddress[network === "nakamoto" ? "testnet" : network]
+                user?.stxAddress[
+                  network === "nakamoto-testnet" ? "testnet" : network
+                ]
               )}
             </p>
           </Link>

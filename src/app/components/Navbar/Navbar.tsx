@@ -15,6 +15,7 @@ import { Button } from "@nextui-org/button";
 import { UserAvatar, UserAvatarSTXAddress } from "../User/UserAvatar";
 import { HamburgerDropdown } from "./Dropdown";
 import { ThemeSwitch } from "./ThemeSwitch";
+import { useTheme } from "next-themes";
 
 // NavbarItem interface. Useful if we want to add more items to the navbar in the future
 export interface NavbarItem {
@@ -31,6 +32,7 @@ export interface NavbarItem {
 
 export const NavbarSoloStacking = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { theme } = useTheme();
   const { isAuthenticated, login, logout } = useContext(AuthContext);
 
   return (
@@ -56,7 +58,11 @@ export const NavbarSoloStacking = () => {
         </NavbarBrand>
         <NavbarMenuToggle
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-          className="md:hidden p-0"
+          className={
+            theme === "dark"
+              ? "text-white md:hidden p-0"
+              : "text-black md:hidden p-0"
+          }
         />
       </NavbarContent>
       <NavbarContent className="hidden md:flex" justify="end">

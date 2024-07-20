@@ -1,10 +1,11 @@
-import { useTheme } from "@/app/contexts/ThemeContext";
+// import { useTheme } from "@/app/contexts/ThemeContext";
 import { Switch } from "@nextui-org/react";
 import { SunIcon } from "../Images/SunIcon";
 import { MoonIcon } from "../Images/MoonIcon";
+import { useTheme } from "next-themes";
 
 export const ThemeSwitch = () => {
-  const { theme, toggleTheme } = useTheme();
+  const { theme, setTheme } = useTheme();
 
   return (
     <Switch
@@ -13,7 +14,7 @@ export const ThemeSwitch = () => {
       color="success"
       startContent={<SunIcon />}
       endContent={theme === "light" && <MoonIcon />}
-      onClick={toggleTheme}
+      onClick={() => (theme == "dark" ? setTheme("light") : setTheme("dark"))}
     >
       Dark mode
     </Switch>
