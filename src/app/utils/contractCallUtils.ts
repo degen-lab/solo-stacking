@@ -6,6 +6,7 @@ import {
   getLockedUstxFromData,
   getStxFromUstxBN,
   getUstxFromStxBN,
+  parseStackIncreaseArgs,
   parseStackStxArgs,
   poxScAddressFromPoxInfo,
   poxScNameFromPoxInfo,
@@ -129,12 +130,8 @@ export const callStackIncrease = async (
     network
   );
 
-  const startBurnHeight = data.poxInfo.current_burnchain_block_height;
-  const functionArgs = parseStackStxArgs(
-    maxAmountUstx,
-    poxAddress,
-    startBurnHeight,
-    totalLockPeriod,
+  const functionArgs = parseStackIncreaseArgs(
+    increaseAmountUstx,
     signature.signerSignature,
     signature.signerKey,
     maxAmountUstx,

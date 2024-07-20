@@ -9,15 +9,49 @@ import {
 } from "@/app/utils/stacksUtils";
 import { displayAmount } from "@/app/utils/displayUtils";
 import type { AllData } from "@/app/utils/queryFunctions";
+import { useContext, useState } from "react";
+import { isValidStackIncreaseAmount } from "@/app/utils/validatorUtils";
+import { callStackIncrease } from "@/app/utils/contractCallUtils";
+import { Pox4SignatureTopic } from "@stacks/stacking";
+import { AuthContext } from "@/app/contexts/AuthContext";
+import CustomErrorMessage from "../ErrorMessage/CustomErrorMessage";
 
 export const ActionStackIncrease: React.FC<{ data: AllData }> = ({ data }) => {
   const { theme } = useTheme();
+  const { network } = useContext(AuthContext);
+
   const [, setOpenIncreasePage] = useAtom(openIncreasePage);
-  const [, setStackIncreaseAmount] = useAtom(stackIncreaseAmountInput);
+  const [stackIncreaseAmount, setStackIncreaseAmount] = useAtom(
+    stackIncreaseAmountInput
+  );
+
+  const [touchedAmount, setTouchedAmount] = useState<boolean>(false);
+
   const currentlyStacking = getLockedUstxFromData(data);
+
   if (currentlyStacking === undefined)
     throw new Error("No locked amount found in data");
+
   const currentlyStackingStx = getStxFromUstxBN(currentlyStacking);
+
+  const showErrorMessage = () => {
+    return (
+      touchedAmount &&
+      !isValidStackIncreaseAmount(stackIncreaseAmount, data).valid
+    );
+  };
+
+  const handleStackIncreaseClick = () => {
+    if (isValidStackIncreaseAmount(stackIncreaseAmount, data).valid) {
+      callStackIncrease(
+        Pox4SignatureTopic.StackIncrease,
+        data,
+        0,
+        stackIncreaseAmount,
+        network
+      );
+    }
+  };
 
   return (
     <div className="text-left p-8">
@@ -34,21 +68,31 @@ export const ActionStackIncrease: React.FC<{ data: AllData }> = ({ data }) => {
         type="number"
         className="mb-4"
         variant="bordered"
-        onChange={(e) => setStackIncreaseAmount(BigNumber(e.target.value))}
-      />{" "}
+        onChange={(e) => {
+          setStackIncreaseAmount(BigNumber(e.target.value));
+          setTouchedAmount(true);
+        }}
+      />
+      {showErrorMessage() && (
+        <CustomErrorMessage
+          message={
+            isValidStackIncreaseAmount(stackIncreaseAmount, data).message
+          }
+        />
+      )}
       <div className="flex flex-col p-8">
         <div className="flex flex-col w-full text-center">
           <div className="w-full">
             <Button
-              //TODO: disable based on validation
-              // disabled={}
+              disabled={
+                !isValidStackIncreaseAmount(stackIncreaseAmount, data).valid
+              }
               className={
                 theme === "light"
                   ? "text-action-dark bg-action-light mb-4 w-[8rem]"
                   : "text-action-light bg-action-dark mb-4 w-[8rem]"
               }
-              // TODO: stack-increase
-              // onClick={()=> callStackIncrease(Pox4SignatureTopic.StackIncrease,data,)}
+              onClick={() => handleStackIncreaseClick()}
             >
               Increase
             </Button>

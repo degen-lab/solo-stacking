@@ -39,28 +39,29 @@ export const ActionStackStx: React.FC<{
   const [touchedCycles, setTouchedCycles] = useState<boolean>(false);
   const [touchedPoxAddr, setTouchedPoxAddr] = useState<boolean>(false);
 
-  const validateStackStxAmount = () => {
+  const showStackStxAmountError = () => {
     return (
       touchedAmount && !isValidStackStxAmount(stackStxAmountSTX, data).valid
     );
   };
 
-  const validateNumCycles = () => {
+  const showNumCyclesError = () => {
     return (
       touchedCycles &&
       !isValidNumCyclesAndMessage(stackStxNumCycles, data).valid
     );
   };
 
-  const validatePoxAddr = () => {
+  const showPoxAddrError = () => {
     return (
       touchedPoxAddr && !isValidBitcoinAddress(stackStxPoxAddr, btcNetwork)
     );
   };
 
-  const isButtonDisabled = () => {
-    return validateStackStxAmount() || validateNumCycles() || validatePoxAddr();
-  };
+  const isButtonDisabled = () =>
+    !isValidStackStxAmount(stackStxAmountSTX, data).valid ||
+    !isValidNumCyclesAndMessage(stackStxNumCycles, data).valid ||
+    !isValidBitcoinAddress(stackStxPoxAddr, btcNetwork);
 
   useEffect(() => {
     if (btcAddress) setStackStxPoxAddr(btcAddress);
@@ -102,7 +103,7 @@ export const ActionStackStx: React.FC<{
             setTouchedAmount(true);
           }}
         />
-        {validateStackStxAmount() && (
+        {showStackStxAmountError() && (
           <CustomErrorMessage
             message={isValidStackStxAmount(stackStxAmountSTX, data).message}
           />
@@ -127,7 +128,7 @@ export const ActionStackStx: React.FC<{
             setTouchedCycles(true);
           }}
         />
-        {validateNumCycles() && (
+        {showNumCyclesError() && (
           <CustomErrorMessage
             message={
               isValidNumCyclesAndMessage(stackStxNumCycles, data).message
@@ -147,7 +148,7 @@ export const ActionStackStx: React.FC<{
           setTouchedPoxAddr(true);
         }}
       />
-      {validatePoxAddr() && (
+      {showPoxAddrError() && (
         <CustomErrorMessage message={"Please use a valid Bitcoin address."} />
       )}
       <div className="text-center">

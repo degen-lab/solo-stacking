@@ -126,8 +126,7 @@ const AuthStackStxPoxDetails: React.FC<{ data: AllData }> = ({ data }) => {
   const [stackStxNumCycles] = useAtom(stackStxNumCyclesInput);
   const [stackStxPoxAddr] = useAtom(stackStxPoxAddrInput);
   const stxThreshold = getStxThresholdFromData(data);
-  const stackStxAMountBN = BigNumber(stackStxAmount);
-  const slotsExpected = stackStxAMountBN
+  const slotsExpected = stackStxAmount
     .dividedBy(stxThreshold)
     .integerValue(BigNumber.ROUND_DOWN);
 
@@ -137,18 +136,18 @@ const AuthStackStxPoxDetails: React.FC<{ data: AllData }> = ({ data }) => {
     stxThreshold,
     slotsExpected
   );
-  const displayedStxAmount = stackStxAMountBN.isNaN()
+  const displayedStxAmount = stackStxAmount.isNaN()
     ? "0"
     : stackStxAmount.toString();
   const displaySlotsExpected =
-    stackStxAMountBN.isNaN() || slotsExpected.lt(1)
+    stackStxAmount.isNaN() || slotsExpected.lt(1)
       ? "0"
       : slotsExpected.toString();
 
   const currentCycle = data.poxInfo.current_cycle.id;
   return (
     <PoxDetailsStructure title="Details">
-      {`You will lock: ${displayedStxAmount} STX`}
+      {`You will lock: ${displayAmount(displayedStxAmount.toString())} STX`}
       {`Reward Slots Expected: ${displaySlotsExpected}`}
       {`Cycles: ${stackStxNumCycles}`}
       {`Stacks Address: ${getShortAddress(
@@ -189,7 +188,9 @@ const StackIncreaseDetails: React.FC<{ data: AllData }> = ({ data }) => {
       {`You are stacking: ${displayAmount(
         currentlyStackingStx.toString()
       )} STX`}
-      {`You will increase by: ${displayedIncreaseStxAmount} STX`}
+      {`You will increase by: ${displayAmount(
+        displayedIncreaseStxAmount.toString()
+      )} STX`}
       {`Additional reward slots expected: ${displayAdditionalSlotsExpected}`}
       {`Cycles: `}
       {`Stacks Address: ${getShortAddress(

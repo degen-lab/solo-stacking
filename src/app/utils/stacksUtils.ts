@@ -71,17 +71,17 @@ export const parseStackExtendArgs = (
 };
 
 export const parseStackIncreaseArgs = (
-  increaseBy: number,
+  increaseBy: BigNumber,
   signerSig: string,
   signerKey: string,
-  maxAmount: number,
+  maxAmount: BigNumber,
   authId: number
 ) => {
   return [
-    uintCV(increaseBy),
+    uintCV(increaseBy.toString()),
     optionalCVOf(bufferCV(hexStringToUint8Array(signerSig))),
     bufferCV(hexStringToUint8Array(signerKey)),
-    uintCV(maxAmount),
+    uintCV(maxAmount.toString()),
     uintCV(authId),
   ];
 };
@@ -90,8 +90,8 @@ export const stacksNetworkFromStringNetwork = (network: Network) =>
   network === "nakamoto-testnet"
     ? new StacksTestnet({ url: "https://api.nakamoto.testnet.hiro.so" })
     : network === "testnet"
-    ? new StacksTestnet()
-    : new StacksMainnet();
+      ? new StacksTestnet()
+      : new StacksMainnet();
 
 export const poxContractFromData = (data: AllData) => data.poxInfo.contract_id;
 
