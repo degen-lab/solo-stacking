@@ -1,4 +1,3 @@
-// import { useTheme } from "@/app/contexts/ThemeContext";
 import { Switch } from "@nextui-org/react";
 import { SunIcon } from "../Images/SunIcon";
 import { MoonIcon } from "../Images/MoonIcon";

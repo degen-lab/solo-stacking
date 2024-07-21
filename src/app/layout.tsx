@@ -3,9 +3,9 @@ import { Roboto } from "next/font/google";
 import AuthContextProvider from "./contexts/AuthContext";
 import { NavbarSoloStacking } from "./components/Navbar/Navbar";
 import "./globals.css";
-// import { ThemeProvider } from "./contexts/ThemeContext";
 import { ThemeProvider } from "next-themes";
 import { ReactQueryProvider } from "./contexts/ReactQueryContext";
+import { DetailedViewProvider } from "./contexts/DetailedViewContext";
 const inter = Roboto({ subsets: ["latin"], weight: "400" });
 
 export const metadata: Metadata = {
@@ -22,14 +22,16 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <ThemeProvider>
-          <ReactQueryProvider>
-            <AuthContextProvider>
-              <div className="flex flex-col lg:min-h-screen">
-                <NavbarSoloStacking />
-                <main className="flex-grow">{children}</main>
-              </div>
-            </AuthContextProvider>
-          </ReactQueryProvider>
+          <DetailedViewProvider>
+            <ReactQueryProvider>
+              <AuthContextProvider>
+                <div className="flex flex-col lg:min-h-screen">
+                  <NavbarSoloStacking />
+                  <main className="flex-grow">{children}</main>
+                </div>
+              </AuthContextProvider>
+            </ReactQueryProvider>
+          </DetailedViewProvider>
         </ThemeProvider>
       </body>
     </html>

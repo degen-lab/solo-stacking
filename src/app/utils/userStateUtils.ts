@@ -1,3 +1,4 @@
+import BigNumber from "bignumber.js";
 import { POX_4_CONTRACT_ADDRESS, POX_4_CONTRACT_NAME } from "../consts/api";
 import { Network } from "../contexts/AuthContext";
 
@@ -68,7 +69,7 @@ export const checkIsIncreaseInProgress = (
     )
       return {
         result: true,
-        increaseAmount: parseInt(
+        increaseAmount: BigNumber(
           transaction.contract_call.function_args[0].repr.slice(1)
         ),
         txid: transaction.tx_id,

@@ -1,16 +1,11 @@
 "use client";
-
 import { AuthContext } from "@/app/contexts/AuthContext";
 import { fetchData } from "@/app/utils/queryFunctions";
 import { useQuery } from "@tanstack/react-query";
 import { useContext, useEffect, useState } from "react";
 import { DisplayedPoxDetails } from "../Details/Details";
 import { ActionContainer } from "../Actions/Actions";
-import {
-  checkIsExtendInProgress,
-  checkIsIncreaseInProgress,
-  checkIsStackingInProgress,
-} from "@/app/utils/userStateUtils";
+import { checkIsStackingInProgress } from "@/app/utils/userStateUtils";
 import {
   extendUserStateAtom,
   increaseUserStateAtom,
@@ -20,6 +15,8 @@ import {
 } from "@/app/utils/atoms";
 import { useAtom } from "jotai";
 import type { AllData } from "@/app/utils/queryFunctions";
+import BigNumber from "bignumber.js";
+import { Spinner } from "@nextui-org/react";
 
 export const Landing: React.FC = () => {
   const { user, network, stxAddress: userAddress } = useContext(AuthContext);
@@ -38,7 +35,11 @@ export const Landing: React.FC = () => {
 
   return (
     <div className="flex flex-row justify-center items-center lg:h-screen w-full">
-      {isLoading && <p>Loading...</p>}
+      {isLoading && (
+        <div className="flex h-screen justify-center">
+          <Spinner label="Loading" color="primary" labelColor="foreground" />
+        </div>
+      )}
       {error && <p>Error retrieving user data</p>}
       {data && <Scenario data={data} />}
     </div>
@@ -48,13 +49,12 @@ export const Landing: React.FC = () => {
 export const Scenario: React.FC<{ data: AllData }> = ({ data }) => {
   const { isAuthenticated, user, network } = useContext(AuthContext);
 
-  // TODO: maybe check other mempool transactions to see if increase/extend are completed
   const [userState, setUserState] = useAtom(userStateAtom);
   const [, setIncreaseUserState] = useAtom(increaseUserStateAtom);
   const [, setExtendUserState] = useAtom(extendUserStateAtom);
 
   const [, setCurrentExtendCount] = useState<number>(0);
-  const [, setCurrentIncreaseAmount] = useState<number>(0);
+  const [, setCurrentIncreaseAmount] = useState<BigNumber>(BigNumber(0));
 
   const [increasePageOpen] = useAtom(openIncreasePage);
   const [extendPageOpen] = useAtom(openExtendPage);
@@ -62,49 +62,23 @@ export const Scenario: React.FC<{ data: AllData }> = ({ data }) => {
   const stackerInfo = data.stackerInfo;
 
   const getUserIncreaseState = () => {
-    const checkIncreaseTransaction = checkIsIncreaseInProgress(
-      mempoolTransactions,
-      network
-    );
-
-    setCurrentIncreaseAmount(0);
+    setCurrentIncreaseAmount(BigNumber(0));
     setIncreaseUserState("None");
 
-    if (checkIncreaseTransaction.result === true) {
-      // setIsIncreaseEnabledMessage(
-      //   `A stack-increase transaction is already in mempool. Amount to increase: ${(
-      //     (checkIncreaseTransaction.increaseAmount || 0) / 1000000
-      //   ).toLocaleString(undefined, {
-      //     maximumFractionDigits: 2,
-      //   })} STX. Txid: ${checkIncreaseTransaction.txid}`
-      // );
-      setCurrentIncreaseAmount(checkIncreaseTransaction.increaseAmount || 0);
+    if (data.mempoolIncrease.gt(0)) {
+      setCurrentIncreaseAmount(data.mempoolIncrease);
       setIncreaseUserState("IncreaseMempool");
     }
-    // else if (stackIncreaseAmount === 0) {
-    //   setIncreaseUserState("None");
-    // }
   };
+
   const getUserExtendState = () => {
-    // extend
-    const checkExtendTransaction = checkIsExtendInProgress(
-      mempoolTransactions,
-      network
-    );
-
     setCurrentExtendCount(0);
-    setIncreaseUserState("None");
+    setExtendUserState("None");
 
-    if (checkExtendTransaction.result === true) {
-      // setIsExtendEnabledMessage(
-      //   `A stack-extend transaction is already in mempool. Number of cycles to extend: ${checkExtendTransaction.extendCount}. Txid: ${checkExtendTransaction.txid}`
-      // );
-      setCurrentExtendCount(checkExtendTransaction.extendCount || 0);
+    if (data.mempoolExtend > 0) {
+      setCurrentExtendCount(data.mempoolExtend);
       setExtendUserState("ExtendMempool");
     }
-    // else if (stackExtendAmount === 0) {
-    //   setExtendUserState("None");
-    // }
   };
   const getUserState = () => {
     const checkStackingTransaction = checkIsStackingInProgress(
@@ -116,10 +90,8 @@ export const Scenario: React.FC<{ data: AllData }> = ({ data }) => {
     if (!isAuthenticated()) setUserState("NoAuth");
     else {
       if (checkStackingTransaction.result === true) {
-        // Stacking transaction is in mempool
         setUserState("StackingMempool");
       } else if (stackerInfo !== null) {
-        // Stacking transaction is confirmed
         setUserState("StackingConfirmed");
       }
     }
@@ -129,7 +101,7 @@ export const Scenario: React.FC<{ data: AllData }> = ({ data }) => {
     getUserState();
     getUserIncreaseState();
     getUserExtendState();
-  }, [user]);
+  }, [user, data, data.mempoolExtend, data.mempoolIncrease]);
 
   return (
     <div className="flex flex-col lg:flex-row justify-center items-center lg:h-screen w-full">

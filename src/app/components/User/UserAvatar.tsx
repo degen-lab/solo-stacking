@@ -2,7 +2,7 @@
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/app/contexts/AuthContext";
 import { Button } from "@nextui-org/button";
-import { getShortAddress } from "../../utils";
+import { explorerAddressUrl, getShorterAddress } from "../../utils";
 import { useMediaQuery } from "react-responsive";
 import Link from "next/link";
 import { useTheme } from "next-themes";
@@ -60,16 +60,16 @@ export const UserAvatarSTXAddress = () => {
           style={{ cursor: "pointer" }}
         >
           <Link
-            // TODO: modularize this link
-            href={`https://explorer.hiro.so/address/${
+            href={explorerAddressUrl(
               user?.stxAddress[
                 network === "nakamoto-testnet" ? "testnet" : network
-              ]
-            }?chain=mainnet`}
+              ],
+              network
+            )}
             target="new"
           >
             <p className="text-black">
-              {getShortAddress(
+              {getShorterAddress(
                 user?.stxAddress[
                   network === "nakamoto-testnet" ? "testnet" : network
                 ]

@@ -1,4 +1,8 @@
-import { openIncreasePage, stackIncreaseAmountInput } from "@/app/utils/atoms";
+import {
+  increaseUserStateAtom,
+  openIncreasePage,
+  stackIncreaseAmountInput,
+} from "@/app/utils/atoms";
 import BigNumber from "bignumber.js";
 import { Button, Input } from "@nextui-org/react";
 import { useAtom } from "jotai";
@@ -20,6 +24,7 @@ export const ActionStackIncrease: React.FC<{ data: AllData }> = ({ data }) => {
   const { theme } = useTheme();
   const { network } = useContext(AuthContext);
 
+  const [, setIncreaseUserState] = useAtom(increaseUserStateAtom);
   const [, setOpenIncreasePage] = useAtom(openIncreasePage);
   const [stackIncreaseAmount, setStackIncreaseAmount] = useAtom(
     stackIncreaseAmountInput
@@ -41,14 +46,21 @@ export const ActionStackIncrease: React.FC<{ data: AllData }> = ({ data }) => {
     );
   };
 
+  const clearState = () => {
+    setStackIncreaseAmount(BigNumber(0));
+    setTouchedAmount(false);
+    setOpenIncreasePage(false);
+    setIncreaseUserState("IncreaseMempool");
+  };
+
   const handleStackIncreaseClick = () => {
     if (isValidStackIncreaseAmount(stackIncreaseAmount, data).valid) {
       callStackIncrease(
         Pox4SignatureTopic.StackIncrease,
         data,
-        0,
         stackIncreaseAmount,
-        network
+        network,
+        () => clearState()
       );
     }
   };
@@ -64,22 +76,25 @@ export const ActionStackIncrease: React.FC<{ data: AllData }> = ({ data }) => {
       <p className="text-lg font-bold mb-4 text-center">
         Insert how much to add to the current stacking amount
       </p>
-      <Input
-        type="number"
-        className="mb-4"
-        variant="bordered"
-        onChange={(e) => {
-          setStackIncreaseAmount(BigNumber(e.target.value));
-          setTouchedAmount(true);
-        }}
-      />
-      {showErrorMessage() && (
-        <CustomErrorMessage
-          message={
-            isValidStackIncreaseAmount(stackIncreaseAmount, data).message
-          }
+      <div className="flex flex-col items-center w-full">
+        <Input
+          type="number"
+          className="mb-4 w-[75%]"
+          variant="bordered"
+          onWheel={(e) => e.currentTarget.blur()}
+          onChange={(e) => {
+            setStackIncreaseAmount(BigNumber(e.target.value));
+            setTouchedAmount(true);
+          }}
         />
-      )}
+        {showErrorMessage() && (
+          <CustomErrorMessage
+            message={
+              isValidStackIncreaseAmount(stackIncreaseAmount, data).message
+            }
+          />
+        )}
+      </div>
       <div className="flex flex-col p-8">
         <div className="flex flex-col w-full text-center">
           <div className="w-full">

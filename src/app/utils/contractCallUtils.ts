@@ -2,10 +2,12 @@ import { Pox4SignatureTopic } from "@stacks/stacking";
 import { getStackingSignature } from "./signatureUtils";
 import {
   getBtcAddressFromData,
+  getCurBurnHeightFromData,
   getLockPeriodFromData,
   getLockedUstxFromData,
   getStxFromUstxBN,
   getUstxFromStxBN,
+  parseStackExtendArgs,
   parseStackIncreaseArgs,
   parseStackStxArgs,
   poxScAddressFromPoxInfo,
@@ -26,24 +28,29 @@ import type { AllData } from "./queryFunctions";
 export const callStackStx = async (
   topic: Pox4SignatureTopic,
   poxAddress: string,
-  rewardCycle: number,
   period: number,
   maxAmountSTX: BigNumber,
   network: any,
-  data: AllData
+  data: AllData,
+  onFinish: () => void
 ) => {
   const functionName = "stack-stx";
+  const currentCycle = getCurRewCycleFromData(data);
+
+  if (currentCycle === null) throw new Error("No current cycle found in data");
+
   const signature = await getStackingSignature(
     topic,
     poxAddress,
-    rewardCycle,
+    currentCycle,
     period,
     maxAmountSTX,
     network
   );
 
-  const startBurnHeight = data.poxInfo.current_burnchain_block_height;
-  const maxAmountUstx = maxAmountSTX.multipliedBy(1000000);
+  const startBurnHeight = getCurBurnHeightFromData(data);
+  const maxAmountUstx = getUstxFromStxBN(maxAmountSTX);
+
   const functionArgs = parseStackStxArgs(
     maxAmountUstx,
     poxAddress,
@@ -55,58 +62,23 @@ export const callStackStx = async (
     signature.authId
   );
 
-  contractCall(functionName, functionArgs, network, data);
+  contractCall(functionName, functionArgs, network, data, onFinish);
 };
-
-// const handleStackIncrease = () => {
-//   if (balancesInfo && stackerInfo && poxInfo) {
-//     console.log('Stack Increase clicked', { stackIncreaseAmount }, "STX.");
-
-//     const functionName = 'stack-increase';
-//     const increaseAmount = Math.floor(stackIncreaseAmount * 1000000);
-
-//     const topic = methodToPox4Topic[functionName];
-//     const poxAddress = parsePoxAddress(stackerInfo.value["pox-addr"].value.version.value, stackerInfo.value["pox-addr"].value.hashbytes.value);
-//     const currentCycle = poxInfo.current_cycle.id;
-//     const lockPeriod = parseInt(stackerInfo.value["lock-period"].value) + activeExtendCount;
-//     const maxAmount = parseInt(balancesInfo.stx.locked) + increaseAmount;
-//     const authId = randomAuthId();
-
-//     const signatureAndKey = getStackingSignature(
-//       topic,
-//       poxAddress,
-//       currentCycle,
-//       lockPeriod,
-//       maxAmount,
-//       authId,
-//     );
-
-//     const functionArgs = parseStackIncreaseArgs(increaseAmount, signatureAndKey.signature, signatureAndKey.publicKey, maxAmount, authId);
-
-//     contractCall(functionName, functionArgs);
-//   }
-// };
 
 export const callStackIncrease = async (
   topic: Pox4SignatureTopic,
   data: AllData,
-  activeExtendCount: number,
   increaseAmountSTX: BigNumber,
-  network: Network
-  // balancesInfo: any,
-  // stackerInfo: any,
-  // poxInfo: any,
-  // period: number,
-  // maxAmountSTX: BigNumber,
-  // network: any,
-  // data: AllData
+  network: Network,
+  onFinish: () => void
 ) => {
   const functionName = "stack-increase";
-  const poxAddress = getBtcAddressFromData(data);
+  const poxAddress = getBtcAddressFromData(data, network);
   const currentCycle = getCurRewCycleFromData(data);
   const currentLockPeriod = getLockPeriodFromData(data);
   const lockedUstx = getLockedUstxFromData(data);
   const increaseAmountUstx = getUstxFromStxBN(increaseAmountSTX);
+  const mempoolExtend = data.mempoolExtend;
 
   if (lockedUstx === undefined)
     throw new Error("No locked amount found in data");
@@ -119,7 +91,7 @@ export const callStackIncrease = async (
   const maxAmountUstx = lockedUstx.plus(increaseAmountUstx);
   const maxAmountSTX = getStxFromUstxBN(maxAmountUstx);
 
-  const totalLockPeriod = currentLockPeriod + activeExtendCount;
+  const totalLockPeriod = currentLockPeriod + mempoolExtend;
 
   const signature = await getStackingSignature(
     topic,
@@ -138,7 +110,59 @@ export const callStackIncrease = async (
     signature.authId
   );
 
-  contractCall(functionName, functionArgs, network, data);
+  contractCall(functionName, functionArgs, network, data, onFinish);
+};
+
+export const callStackExtend = async (
+  topic: Pox4SignatureTopic,
+  stackExtendNumCycles: number,
+  data: AllData,
+  network: Network,
+  onFinish: () => void
+) => {
+  const functionName = "stack-extend";
+  const extendCount = stackExtendNumCycles;
+  const poxAddress = getBtcAddressFromData(data, network);
+  const currentCycle = getCurRewCycleFromData(data);
+  const lockedUstx = getLockedUstxFromData(data);
+
+  console.log("lockedUstx", lockedUstx);
+
+  if (lockedUstx === undefined) {
+    throw new Error("Invalid user state - No locked amount found in data");
+  }
+
+  if (poxAddress === undefined) {
+    throw new Error("Invalid user state - No PoX address found in data");
+  }
+
+  if (currentCycle === null) {
+    throw new Error("Invalid user state - No current cycle found in data");
+  }
+
+  const activeIncreaseAmount = data.mempoolIncrease;
+  const maxAmountUstx = lockedUstx.plus(activeIncreaseAmount);
+  const maxAmountSTX = getStxFromUstxBN(maxAmountUstx);
+
+  const signature = await getStackingSignature(
+    topic,
+    poxAddress,
+    currentCycle,
+    extendCount,
+    maxAmountSTX,
+    network
+  );
+
+  const functionArgs = parseStackExtendArgs(
+    extendCount,
+    poxAddress,
+    signature.signerSignature,
+    signature.signerKey,
+    maxAmountUstx,
+    signature.authId
+  );
+
+  contractCall(functionName, functionArgs, network, data, onFinish);
 };
 
 /**
@@ -152,7 +176,8 @@ export const contractCall = (
   functionName: string,
   functionArgs: ClarityValue[],
   network: Network,
-  data: AllData
+  data: AllData,
+  onFinish: () => void
 ) => {
   const poxAddress = poxScAddressFromPoxInfo(data);
   const poxName = poxScNameFromPoxInfo(data);
@@ -169,6 +194,7 @@ export const contractCall = (
     postConditions: [],
 
     onFinish: (response) => {
+      onFinish();
       return response;
     },
     onCancel: () => {

@@ -57,7 +57,7 @@ export const parseStackExtendArgs = (
   poxAddr: string,
   signerSig: string,
   signerKey: string,
-  maxAmount: number,
+  maxAmount: BigNumber,
   authId: number
 ) => {
   return [
@@ -65,7 +65,7 @@ export const parseStackExtendArgs = (
     poxAddressToTuple(poxAddr),
     optionalCVOf(bufferCV(hexStringToUint8Array(signerSig))),
     bufferCV(hexStringToUint8Array(signerKey)),
-    uintCV(maxAmount),
+    uintCV(maxAmount.toString()),
     uintCV(authId),
   ];
 };
@@ -90,8 +90,8 @@ export const stacksNetworkFromStringNetwork = (network: Network) =>
   network === "nakamoto-testnet"
     ? new StacksTestnet({ url: "https://api.nakamoto.testnet.hiro.so" })
     : network === "testnet"
-      ? new StacksTestnet()
-      : new StacksMainnet();
+    ? new StacksTestnet()
+    : new StacksMainnet();
 
 export const poxContractFromData = (data: AllData) => data.poxInfo.contract_id;
 
@@ -133,15 +133,14 @@ export const getRemainingCyclesFromData = (data: AllData) => {
   return endCycle ? endCycle - currentCycle : undefined;
 };
 
-export const getBtcAddressFromData = (data: AllData) => {
+export const getBtcAddressFromData = (data: AllData, network: Network) => {
   if (!data.stackerInfo || !data.stackerInfo.value) return undefined;
 
   const poxAddress = data.stackerInfo.value["pox-addr"].value;
   const version = poxAddress.version.value;
   const hashbytes = poxAddress.hashbytes.value;
 
-  // TODO: Change network to be dynamic
-  return parsePoxAddress(version, hashbytes, "nakamoto-testnet");
+  return parsePoxAddress(version, hashbytes, network);
 };
 
 export const getLockPeriodFromData = (data: AllData) => {
@@ -153,3 +152,6 @@ export const getLockedUstxFromData = (data: AllData) => {
   if (!data.balancesInfo || !data.balancesInfo.stx) return undefined;
   return BigNumber(data.balancesInfo.stx.locked);
 };
+
+export const getCurBurnHeightFromData = (data: AllData) =>
+  data.poxInfo.current_burnchain_block_height;

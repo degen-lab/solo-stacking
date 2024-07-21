@@ -16,8 +16,8 @@ import { UserAvatar, UserAvatarSTXAddress } from "../User/UserAvatar";
 import { HamburgerDropdown } from "./Dropdown";
 import { ThemeSwitch } from "./ThemeSwitch";
 import { useTheme } from "next-themes";
+import { DetailedViewSwitch } from "./DetailedViewSwitch";
 
-// NavbarItem interface. Useful if we want to add more items to the navbar in the future
 export interface NavbarItem {
   name: string;
   location: string;
@@ -56,19 +56,31 @@ export const NavbarSoloStacking = () => {
             </p>
           </Link>
         </NavbarBrand>
-        <NavbarMenuToggle
-          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-          className={
-            theme === "dark"
-              ? "text-white md:hidden p-0"
-              : "text-black md:hidden p-0"
-          }
-        />
+        {/* TODO: Fix hamburger icon - Seems to be a NextUI bug */}
       </NavbarContent>
+
       <NavbarContent className="hidden md:flex" justify="end">
         <UserAvatar></UserAvatar>
         <HamburgerDropdown />
       </NavbarContent>
+
+      <NavbarMenuToggle
+        className={
+          theme === "dark"
+            ? "text-white md:hidden p-0"
+            : "text-black md:hidden p-0"
+        }
+        aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+      >
+        <Image
+          src="/hamburger.png"
+          className={theme === "dark" ? "invert w-full" : "invert-0 w-full"}
+          style={{ cursor: "pointer" }}
+          alt="hamburger"
+          width={30}
+          height={30}
+        />
+      </NavbarMenuToggle>
 
       <NavbarMenu className="text-center">
         <NavbarMenuItem className="mb-4">
@@ -76,6 +88,9 @@ export const NavbarSoloStacking = () => {
         </NavbarMenuItem>
         <NavbarMenuItem className="mb-4">
           <ThemeSwitch />
+        </NavbarMenuItem>
+        <NavbarMenuItem className="mb-4">
+          <DetailedViewSwitch />
           <Divider />
         </NavbarMenuItem>
         <NavbarMenuItem className="mb-4">

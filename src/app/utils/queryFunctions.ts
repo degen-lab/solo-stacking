@@ -6,6 +6,10 @@ import {
   fetchPoxInfo,
   fetchStackerInfo,
 } from "./api";
+import {
+  checkIsExtendInProgress,
+  checkIsIncreaseInProgress,
+} from "./userStateUtils";
 
 type PoxInfoType = {
   contract_id: string;
@@ -71,6 +75,8 @@ export type AllData = {
   amountUpperLimit: BigNumber;
   amountLowerLimit: BigNumber;
   cyclesLimit: number;
+  mempoolExtend: number;
+  mempoolIncrease: BigNumber;
 };
 
 export const fetchData = async (
@@ -112,6 +118,12 @@ export const fetchData = async (
       : 12
     : 0;
 
+  const mempoolExtend =
+    checkIsExtendInProgress(mempoolTransactions, network).extendCount || 0;
+  const mempoolIncrease =
+    checkIsIncreaseInProgress(mempoolTransactions, network).increaseAmount ||
+    BigNumber(0);
+
   return {
     poxInfo,
     balancesInfo,
@@ -120,5 +132,7 @@ export const fetchData = async (
     amountUpperLimit,
     amountLowerLimit,
     cyclesLimit,
+    mempoolExtend,
+    mempoolIncrease,
   };
 };

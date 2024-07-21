@@ -1,4 +1,4 @@
-import { Pox4SignatureTopic, StackingClient } from "@stacks/stacking";
+import { Pox4SignatureTopic } from "@stacks/stacking";
 import axios from "axios";
 import BigNumber from "bignumber.js";
 
