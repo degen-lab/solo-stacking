@@ -56,7 +56,6 @@ export const NavbarSoloStacking = () => {
             </p>
           </Link>
         </NavbarBrand>
-        {/* TODO: Fix hamburger icon - Seems to be a NextUI bug */}
       </NavbarContent>
 
       <NavbarContent className="hidden md:flex" justify="end">
@@ -64,23 +63,16 @@ export const NavbarSoloStacking = () => {
         <HamburgerDropdown />
       </NavbarContent>
 
+      {/* TODO: Fix hamburger icon - Seems to be a NextUI bug */}
       <NavbarMenuToggle
         className={
           theme === "dark"
-            ? "text-white md:hidden p-0"
-            : "text-black md:hidden p-0"
+            ? "fill-white md:hidden p-0"
+            : "fill-black md:hidden p-0"
         }
+        icon={isMenuOpen ? "x" : "≡"}
         aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-      >
-        <Image
-          src="/hamburger.png"
-          className={theme === "dark" ? "invert w-full" : "invert-0 w-full"}
-          style={{ cursor: "pointer" }}
-          alt="hamburger"
-          width={30}
-          height={30}
-        />
-      </NavbarMenuToggle>
+      ></NavbarMenuToggle>
 
       <NavbarMenu className="text-center">
         <NavbarMenuItem className="mb-4">
@@ -91,8 +83,21 @@ export const NavbarSoloStacking = () => {
         </NavbarMenuItem>
         <NavbarMenuItem className="mb-4">
           <DetailedViewSwitch />
-          <Divider />
         </NavbarMenuItem>
+        <Divider className="mb-4" />
+        <NavbarMenuItem className="mb-4">
+          <div className="flex items-center justify-center">
+            <Link
+              href="/rewards"
+              className={`text-center items-center text-[${
+                theme === "dark" ? "white" : "black"
+              }]`}
+            >
+              Rewards
+            </Link>
+          </div>
+        </NavbarMenuItem>
+        <Divider className="mb-4" />
         <NavbarMenuItem className="mb-4">
           {isAuthenticated() ? (
             <Button color="primary" variant="ghost" onClick={logout}>

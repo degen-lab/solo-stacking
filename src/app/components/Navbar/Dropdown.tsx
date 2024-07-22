@@ -5,6 +5,7 @@ import {
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
+  Link,
 } from "@nextui-org/react";
 import { useContext, useEffect, useState } from "react";
 import Image from "next/image";
@@ -42,6 +43,18 @@ export const HamburgerDropdown = () => {
           </DropdownItem>
           <DropdownItem key="detailed" showDivider>
             <DetailedViewSwitch />
+          </DropdownItem>
+          <DropdownItem showDivider>
+            <div className="flex items-center justify-center">
+              <Link
+                href="/rewards"
+                className={`text-center items-center text-[${
+                  theme === "dark" ? "white" : "black"
+                }]`}
+              >
+                Rewards
+              </Link>
+            </div>
           </DropdownItem>
           <DropdownItem
             key="logout"
