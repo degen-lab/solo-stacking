@@ -8,6 +8,7 @@ import { useAtom } from "jotai";
 import { useTheme } from "next-themes";
 import {
   getLockedUstxFromData,
+  getPeriodFromData,
   getStxFromUstxBN,
 } from "@/app/utils/stacksUtils";
 import { displayAmount } from "@/app/utils/displayUtils";
@@ -18,9 +19,12 @@ import { useContext, useState } from "react";
 import { callStackExtend } from "@/app/utils/contractCallUtils";
 import { Pox4SignatureTopic } from "@stacks/stacking";
 import { AuthContext } from "@/app/contexts/AuthContext";
+import { useDetailedView } from "@/app/contexts/DetailedViewContext";
+import { getCurRewCycleFromData } from "@/app/utils/api";
 
 export const ActionStackExtend: React.FC<{ data: AllData }> = ({ data }) => {
   const { theme } = useTheme();
+  const { detailedView } = useDetailedView();
   const { network } = useContext(AuthContext);
 
   const [, setExtendUserState] = useAtom(extendUserStateAtom);
@@ -32,11 +36,20 @@ export const ActionStackExtend: React.FC<{ data: AllData }> = ({ data }) => {
   const [touchedAmount, setTouchedAmount] = useState<boolean>(false);
 
   const currentlyStacking = getLockedUstxFromData(data);
+  const curRewCycle = getCurRewCycleFromData(data);
+  const lockPeriod = getPeriodFromData(data);
+
+  if (!curRewCycle) {
+    throw new Error("No current reward cycle found in data");
+  }
 
   if (currentlyStacking === undefined)
     throw new Error("No locked amount found in data");
 
-  const currentlyStackingStx = getStxFromUstxBN(currentlyStacking);
+  const firstRewardCycle = data.stackerInfo?.value["first-reward-cycle"].value
+    ? parseInt(data.stackerInfo?.value["first-reward-cycle"].value)
+    : 0;
+  const stackingThisCycle = firstRewardCycle <= curRewCycle;
 
   const showErrorMessage = () => {
     return (
@@ -67,15 +80,35 @@ export const ActionStackExtend: React.FC<{ data: AllData }> = ({ data }) => {
 
   return (
     <div className="text-left p-8">
+      {detailedView && (
+        <div className="flex justify-center">
+          <p className="text-md mb-4 text-center text-[#909090] w-[75%]">
+            ℹ️ You are currently stacking. You are eligible to extend your
+            stacking period. Please complete the field below to proceed.
+          </p>
+        </div>
+      )}
       <h1 className="font-extrabold mb-8 text-center">Extend Stack</h1>
       <h1 className="text-lg font-bold mb-4 text-center">
-        {`You are currently stacking ${displayAmount(
-          currentlyStackingStx.toString()
-        )} STX`}
+        {stackingThisCycle && lockPeriod > 1
+          ? `You are stacking for this cycle and the next
+         ${lockPeriod - 1}`
+          : !stackingThisCycle && lockPeriod > 1
+          ? `You are stacking for the next ${lockPeriod} cycles. This one won't gereate rewards.`
+          : `Your stack will end after this cycle. Extend now to keep it active.`}
       </h1>
-      <p className="text-lg font-bold mb-4 text-center">
-        Number of cycles to extend stack for
-      </p>
+      <p className="text-lg font-bold mb-4 text-center">Extend count</p>
+      {detailedView && (
+        <div className="flex justify-center">
+          <p className="text-md mb-4 text-center text-[#909090] w-[75%]">
+            Enter the number of reward cycles you want to extend your stack
+            with. This will keep your stack active for additional cycles without
+            needing to start a new stack. You can see on the right side how many
+            extra cycles you’ll cover. You can extend your stack for maximum 12
+            cycles total.
+          </p>
+        </div>
+      )}
       <div className="flex flex-col items-center w-full">
         <Input
           type="number"

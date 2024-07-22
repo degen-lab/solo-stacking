@@ -19,9 +19,11 @@ import { callStackIncrease } from "@/app/utils/contractCallUtils";
 import { Pox4SignatureTopic } from "@stacks/stacking";
 import { AuthContext } from "@/app/contexts/AuthContext";
 import CustomErrorMessage from "../ErrorMessage/CustomErrorMessage";
+import { useDetailedView } from "@/app/contexts/DetailedViewContext";
 
 export const ActionStackIncrease: React.FC<{ data: AllData }> = ({ data }) => {
   const { theme } = useTheme();
+  const { detailedView } = useDetailedView();
   const { network } = useContext(AuthContext);
 
   const [, setIncreaseUserState] = useAtom(increaseUserStateAtom);
@@ -67,6 +69,14 @@ export const ActionStackIncrease: React.FC<{ data: AllData }> = ({ data }) => {
 
   return (
     <div className="text-left p-8">
+      {detailedView && (
+        <div className="flex justify-center">
+          <p className="text-md mb-4 text-center text-[#909090] w-[75%]">
+            ℹ️ You are currently stacking. You are eligible to increase your
+            stacked amount. Please complete the field below to proceed.
+          </p>
+        </div>
+      )}
       <h1 className="font-extrabold mb-8 text-center">Increase Stack</h1>
       <p className="text-lg font-bold mb-4 text-center">
         {`You are currently stacking ${displayAmount(
@@ -74,8 +84,18 @@ export const ActionStackIncrease: React.FC<{ data: AllData }> = ({ data }) => {
         )} STX`}
       </p>
       <p className="text-lg font-bold mb-4 text-center">
-        Insert how much to add to the current stacking amount
+        Increase amount (STX)
       </p>
+      {detailedView && (
+        <div className="flex justify-center">
+          <p className="text-md mb-4 text-center text-[#909090] w-[75%]">
+            Enter the amount of STX you want to add. You can use this feature if
+            the slot threshold has increased or if you want to add more STX to
+            earn extra slots for the next cycle. You can see how many additional
+            slots you'll get on the right side.
+          </p>
+        </div>
+      )}
       <div className="flex flex-col items-center w-full">
         <Input
           type="number"

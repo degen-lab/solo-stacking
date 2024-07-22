@@ -21,12 +21,14 @@ export const DetailedViewProvider: React.FC<{
   const [detailedView, setDetailedView] = useState<boolean>(false);
 
   useEffect(() => {
-    localStorage.setItem("detailedView", detailedView.toString());
-  }, [detailedView]);
+    const savedDetailedView = localStorage.getItem("detailedView");
+    setDetailedView(savedDetailedView === "true" ? true : false);
+  }, []);
 
   const toggleView = () => {
     console.log(detailedView);
     setDetailedView((prevView) => (prevView === true ? false : true));
+    localStorage.setItem("detailedView", detailedView ? "false" : "true");
   };
 
   return (

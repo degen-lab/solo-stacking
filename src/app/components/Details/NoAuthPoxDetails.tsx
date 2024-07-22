@@ -21,12 +21,22 @@ export const NoAuthPoxDetails: React.FC<{ data: AllData }> = ({ data }) => {
   return (
     <div className="flex-col text-center">
       <PoxDetailsStructure title="General Stacking Details">
-        {`Minimum Threshold: ${displayAmount(minThreshold.toString())} STX`}
-        {`Current Cycle: ${currentCycle}`}
-        {`Next Cycle In: ${nextCycleIn} blocks`}
-        {`Total Stacked This Cycle: ${displayAmount(
-          totalStackedThisCycle.toFixed(2)
-        )} STX`}
+        <div>
+          <span className="font-bold">Minimum Threshold: </span>
+          {`${displayAmount(minThreshold.toString())} STX`}
+        </div>
+        <div>
+          <span className="font-bold">Current Cycle: </span>
+          {currentCycle}
+        </div>
+        <div>
+          <span className="font-bold">Next Cycle In: </span>
+          {`${nextCycleIn} blocks`}
+        </div>
+        <div>
+          <span className="font-bold">Total Stacked This Cycle: </span>
+          {`${displayAmount(totalStackedThisCycle.toFixed(2))} STX`}
+        </div>
       </PoxDetailsStructure>
       <Button className="mt-8" color="primary" onClick={() => login()}>
         Connect Wallet to Stack

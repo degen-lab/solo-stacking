@@ -39,7 +39,6 @@ export const AlreadyStacking: React.FC<{
   const [extendUserState] = useAtom(extendUserStateAtom);
   const [, setOpenIncreasePage] = useAtom(openIncreasePage);
   const [, setOpenExtendPage] = useAtom(openExtendPage);
-  console.log(increaseUserState);
   if (!data.balancesInfo) return null;
   if (!data.balancesInfo.stx) return null;
   const currentlyStackingUstx = getLockedUstxFromData(data) || BigNumber(0);
