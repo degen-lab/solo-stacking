@@ -38,15 +38,37 @@ type PoxInfoType = {
     blocks_until_reward_phase: number;
     ustx_until_pox_rejection: any;
   };
-  epochs: any[];
+  epochs: Epoch[];
   min_amount_ustx: number;
   prepare_cycle_length: number;
   reward_cycle_id: number;
   reward_cycle_length: number;
   rejection_votes_left_required: any;
   next_reward_cycle_in: number;
-  contract_versions: any[];
+  contract_versions: ContractVersion[];
 };
+
+interface ContractVersion {
+  contract_id: string;
+  activation_burnchain_block_height: number;
+  first_reward_cycle_id: number;
+}
+
+interface BlockLimit {
+  write_length: number;
+  write_count: number;
+  read_length: number;
+  read_count: number;
+  runtime: number;
+}
+
+interface Epoch {
+  epoch_id: string;
+  start_height: number;
+  end_height: number;
+  block_limit: BlockLimit;
+  network_epoch: number;
+}
 
 export type StackerInfoType = StackerInfoExisting | null;
 
@@ -77,6 +99,7 @@ export type AllData = {
   cyclesLimit: number;
   mempoolExtend: number;
   mempoolIncrease: BigNumber;
+  activationBurnchainBlockHeight: number;
 };
 
 export const fetchData = async (
@@ -124,6 +147,9 @@ export const fetchData = async (
     checkIsIncreaseInProgress(mempoolTransactions, network).increaseAmount ||
     BigNumber(0);
 
+  const activationBurnchainBlockHeight =
+    poxInfo.contract_versions[3].activation_burnchain_block_height;
+
   return {
     poxInfo,
     balancesInfo,
@@ -134,5 +160,6 @@ export const fetchData = async (
     cyclesLimit,
     mempoolExtend,
     mempoolIncrease,
+    activationBurnchainBlockHeight,
   };
 };

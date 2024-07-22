@@ -4,6 +4,7 @@ import {
   API_MEMPOOL_TRANSACTIONS_URL,
   API_POX_INFO_URL,
   API_STACKER_INFO_URL,
+  API_THEORETICAL_REWARDS_POX_URL,
 } from "../consts/api";
 import { cvToHex, cvToJSON, hexToCV, principalCV } from "@stacks/transactions";
 import { Network } from "../contexts/AuthContext";
@@ -24,6 +25,83 @@ export const fetchPoxInfo = async (network: Network): Promise<any> => {
       }
     } else {
       console.error(`Error fetching PoX info: ${error}`);
+    }
+    return null;
+  }
+};
+
+export const fetchTheoreticalRewards = async (
+  address: string,
+  network: Network,
+  limit: number,
+  offset: number
+): Promise<any> => {
+  try {
+    const response = await axios.get(
+      API_THEORETICAL_REWARDS_POX_URL(address, network, limit, offset)
+    );
+
+    return response.data;
+  } catch (error: any) {
+    if (error.response) {
+      if (error.response.status === 429) {
+        await new Promise((resolve) => setTimeout(resolve, 10000));
+        return fetchTheoreticalRewards(address, network, limit, offset);
+      } else {
+        console.error(`Error fetching Theoretical Rewards: ${error}`);
+      }
+    } else {
+      console.error(`Error fetching Theoretical Rewards: ${error}`);
+    }
+    return null;
+  }
+};
+
+export const fetchActivationBurnchainBlockHeight = async (
+  network: Network
+): Promise<any> => {
+  try {
+    const response = await axios.get(API_POX_INFO_URL(network));
+
+    return response.data.contract_versions[3].activation_burnchain_block_height;
+  } catch (error: any) {
+    if (error.response) {
+      if (error.response.status === 429) {
+        await new Promise((resolve) => setTimeout(resolve, 10000));
+        return fetchActivationBurnchainBlockHeight(network);
+      } else {
+        console.error(
+          `Error fetching Activation Burnchain Block Height: ${error}`
+        );
+      }
+    } else {
+      console.error(
+        `Error fetching Activation Burnchain Block Height: ${error}`
+      );
+    }
+    return null;
+  }
+};
+
+export const fetchCurrentBurnchainBlockHeight = async (
+  network: Network
+): Promise<any> => {
+  try {
+    const response = await axios.get(API_POX_INFO_URL(network));
+
+    return response.data.current_burnchain_block_height;
+  } catch (error: any) {
+    if (error.response) {
+      if (error.response.status === 429) {
+        await new Promise((resolve) => setTimeout(resolve, 10000));
+        return fetchActivationBurnchainBlockHeight(network);
+      } else {
+        console.error(
+          `Error fetching Current Burnchain Block Height: ${error}`
+        );
+      }
+    } else {
+      console.error(`Error fetching Current Burnchain Block Height: ${error}`);
     }
     return null;
   }
