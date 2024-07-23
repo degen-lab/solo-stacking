@@ -7,16 +7,15 @@ import {
 } from "@tanstack/react-table";
 
 export interface RowData {
-  stacker: string;
-  startCycle: number;
-  endCycle: number;
-  poxAddress: string;
-  amountUstx: number;
-  amountStx: number;
-  txid: string;
-  functionName: string;
-  rewardCycle: number;
-  rewardIndex: number;
+  canonical: string;
+  burn_block_hash: string;
+  burn_block_height: number;
+  burn_amount?: number;
+  reward_recipient?: string;
+  reward_amount: number;
+  reward_index?: number;
+  address: string;
+  slot_index?: number;
 }
 
 export type CustomColumnDef<TData> = ColumnDef<TData> & {

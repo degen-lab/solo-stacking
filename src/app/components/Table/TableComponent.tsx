@@ -1,4 +1,4 @@
-import { isCustomColumn, TableComponentProps } from "@/types/tableTypes";
+import { isCustomColumn, TableComponentProps } from "@/app/types/tableTypes";
 import {
   flexRender,
   getCoreRowModel,
