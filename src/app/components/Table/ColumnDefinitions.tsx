@@ -102,7 +102,7 @@ const createBurnBlockHashColumn = (): CustomColumnDef<RowData> => ({
         href={GET_STACKS_BLOCK_HASH_EXPLORER_URL(blockHash)}
         target="_blank"
         rel="noopener noreferrer"
-        className="text-orange-600 dark:text-orange-400 hover:underline"
+        className="text-purple-600 dark:text-orange-400 hover:underline"
       >
         {shortBlockHash}
       </a>

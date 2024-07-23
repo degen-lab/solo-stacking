@@ -1,4 +1,4 @@
-import { RowData as RewardInfo } from "@tanstack/react-table";
+import { RowData as RewardInfo } from "@/app/types/tableTypes";
 interface PracticalRewardedInfo {
   canonical: boolean;
   burn_block_hash: string;

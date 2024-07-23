@@ -24,8 +24,8 @@ const API_CONFIG = {
     GET_BITCOIN_ADDRESS_EXPLORER_URL(address: string): string {
       return `https://mempool.space/address/${address}`;
     },
-    GET_STACKS_BLOCK_HASH_EXPLORER_URL(hash: string): string {
-      return `https://explorer.hiro.so/block/${hash}?chain=mainnet`;
+    GET_BITCOIN_BLOCK_HASH_EXPLORER_URL(hash: string): string {
+      return `https://mempool.space/block/${hash}`;
     },
     GET_STACKS_ADDRESS_EXPLORER_URL(address: string): string {
       return `https://explorer.hiro.so/address/${address}?chain=mainnet`;
@@ -38,8 +38,8 @@ const API_CONFIG = {
     GET_BITCOIN_ADDRESS_EXPLORER_URL(address: string): string {
       return `https://mempool.space/testnet/address/${address}`;
     },
-    GET_STACKS_BLOCK_HASH_EXPLORER_URL(hash: string): string {
-      return `https://explorer.hiro.so/block/${hash}?chain=testnet`;
+    GET_BITCOIN_BLOCK_HASH_EXPLORER_URL(hash: string): string {
+      return `https://mempool.space/testnet/block/${hash}`;
     },
     GET_STACKS_ADDRESS_EXPLORER_URL(address: string): string {
       return `https://explorer.hiro.so/address/${address}?chain=testnet`;
@@ -53,8 +53,8 @@ const API_CONFIG = {
       return `https://mempool.space/testnet/address/${address}`; // TODO: replace this
     },
 
-    GET_STACKS_BLOCK_HASH_EXPLORER_URL(hash: string): string {
-      return `https://explorer.hiro.so/block/${hash}?chain=testnet&api=https://api.nakamoto.testnet.hiro.so`;
+    GET_BITCOIN_BLOCK_HASH_EXPLORER_URL(hash: string): string {
+      return `https://mempool.space/testnet/block/${hash}`;
     },
     GET_STACKS_ADDRESS_EXPLORER_URL(address: string): string {
       return `https://explorer.hiro.so/address/${address}?chain=testnet&api=https://api.nakamoto.testnet.hiro.so`;
@@ -71,4 +71,4 @@ export const GET_BITCOIN_ADDRESS_EXPLORER_URL =
 export const GET_STACKS_ADDRESS_EXPLORER_URL =
   currentConfig.GET_STACKS_ADDRESS_EXPLORER_URL;
 export const GET_STACKS_BLOCK_HASH_EXPLORER_URL =
-  currentConfig.GET_STACKS_BLOCK_HASH_EXPLORER_URL;
+  currentConfig.GET_BITCOIN_BLOCK_HASH_EXPLORER_URL;

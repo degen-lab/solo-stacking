@@ -92,7 +92,7 @@ export const ActionStackIncrease: React.FC<{ data: AllData }> = ({ data }) => {
             Enter the amount of STX you want to add. You can use this feature if
             the slot threshold has increased or if you want to add more STX to
             earn extra slots for the next cycle. You can see how many additional
-            slots you'll get on the right side.
+            slots you’ll get on the right side.
           </p>
         </div>
       )}

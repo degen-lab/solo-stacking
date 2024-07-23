@@ -9,9 +9,9 @@ import { useTheme } from "next-themes";
 import {
   getLockedUstxFromData,
   getPeriodFromData,
-  getStxFromUstxBN,
+  // getStxFromUstxBN,
 } from "@/app/utils/stacksUtils";
-import { displayAmount } from "@/app/utils/displayUtils";
+// import { displayAmount } from "@/app/utils/displayUtils";
 import type { AllData } from "@/app/utils/queryFunctions";
 import { isValidStackExtendCount } from "@/app/utils/validatorUtils";
 import CustomErrorMessage from "../ErrorMessage/CustomErrorMessage";

@@ -115,7 +115,7 @@ export const ActionStackStx: React.FC<{
           <p className="text-md mb-4 text-center text-[#909090] w-[75%]">
             You will earn one reward slot for every time you stack the minimum
             amount. Since this minimum can increase in steps of 10,000 STX each
-            cycle, it's a good idea to stack a bit extra to keep the same number
+            cycle, it’s a good idea to stack a bit extra to keep the same number
             of slots.
           </p>
         </div>
@@ -187,7 +187,7 @@ export const ActionStackStx: React.FC<{
       {detailedView && (
         <div className="flex justify-center">
           <p className="text-md mb-4 text-center text-[#909090] w-[75%]">
-            This is the Bitcoin address where you'll receive rewards from the
+            This is the Bitcoin address where you’ll receive rewards from the
             PoX mechanism. Rewards will be sent to this address as the cycle
             progresses.
           </p>

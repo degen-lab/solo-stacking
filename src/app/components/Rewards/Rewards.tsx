@@ -10,12 +10,11 @@ import { getRewards } from "./wantedData";
 import {
   ColumnFiltersState,
   OnChangeFn,
-  RowData,
   SortingState,
   VisibilityState,
 } from "@tanstack/react-table";
 import { columnsMap } from "../Table/ColumnDefinitions";
-import { CustomColumnDef } from "@/app/types/tableTypes";
+import { CustomColumnDef, RowData } from "@/app/types/tableTypes";
 import { TableComponent } from "../Table/TableComponent";
 
 export const Rewards = () => {
@@ -84,7 +83,7 @@ export const Rewards = () => {
   const data = getRewards(practicalRewarded, theoreticalRewarded);
 
   const currentColumns = useMemo(() => columnsMap[activeTab], [activeTab]);
-  const currentData = useMemo(() => data ?? [], [data, activeTab]);
+  // const currentData = useMemo(() => data ?? [], [data, activeTab]);
 
   const [zoomLevel, setZoomLevel] = useState(100);
   const defaultZoom = 100;
