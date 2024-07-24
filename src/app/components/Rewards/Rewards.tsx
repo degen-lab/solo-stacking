@@ -1,15 +1,4 @@
-import {
-  fetchActivationBurnchainBlockHeight,
-  fetchCurrentBurnchainBlockHeight,
-} from "@/app/utils/api";
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
-import { AuthContext } from "@/app/contexts/AuthContext";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { theoreticalRewarded } from "./mockTheoretical";
 import { practicalRewarded } from "./mockPractical";
 import { getRewards } from "./wantedData";
@@ -24,48 +13,21 @@ import { CustomColumnDef, RowData } from "@/app/types/tableTypes";
 import { TableComponent } from "../Table/TableComponent";
 import { RewardsDataType } from "@/app/utils/queryFunctions";
 
-export const Rewards: React.FC<{ data: RewardsDataType }> = ({ data }) => {
-  const { network } = useContext(AuthContext);
-  // TODO: Any strong reason to do this?
-  // = (process.env.NEXT_PUBLIC_NETWORK || "mainnet") as unknown as Network;
-  console.log("data:::", data);
-  const rewardsData = getRewards([], data.theoreticalRewards);
-  const [activationBurnchainBlockHeight, setActivationBurnchainBlockHeight] =
-    useState(null);
-  const [currentBurnchainBlockHeight, setCurrentBurnchainBlockHeight] =
-    useState(null);
-
+export const Rewards: React.FC<{ rewardsData: RewardsDataType }> = ({
+  rewardsData,
+}) => {
+  console.log("data:::", rewardsData);
+  const [displayedRewards, setDisplayedRewards] = useState<RowData[]>([]);
   useEffect(() => {
-    const getActivationBurnchainBlockHeight = async () => {
-      const height = await fetchActivationBurnchainBlockHeight(network);
-      setActivationBurnchainBlockHeight(height);
-    };
+    if (
+      rewardsData.practicalRewards.length > 0 &&
+      rewardsData.theoreticalRewards.length > 0
+    )
+      setDisplayedRewards(
+        getRewards(rewardsData.practicalRewards, rewardsData.theoreticalRewards)
+      );
+  }, [rewardsData]);
 
-    getActivationBurnchainBlockHeight();
-  }, [network]);
-
-  // get currentBlockHeight
-  useEffect(() => {
-    const getCurrentBurnchainBlockHeight = async () => {
-      const height = await fetchCurrentBurnchainBlockHeight(network);
-      setCurrentBurnchainBlockHeight(height);
-    };
-
-    getCurrentBurnchainBlockHeight();
-  }, [network]);
-
-  // what was actually rewarded
-  // ❯ curl -X GET "https://api.mainnet.hiro.so/extended/v1/burnchain/reward_slot_holders/1HZPdkmFNt53uYd9jihqL4B6YRy5MjVJNc"
-  // API_PRACTICAL_REWARDS_POX_URL() connected address
-  // how to go? while current > activation
-  // fetch limit starting from current
-  // current - limit
-  // add values to list[]
-
-  // what should have been rewarded
-  // ❯ curl -X GET "https://api.mainnet.hiro.so/extended/v1/burnchain/rewards/1HZPdkmFNt53uYd9jihqL4B6YRy5MjVJNc"
-
-  console.log("rewards: ", getRewards(practicalRewarded, theoreticalRewarded));
   const [activeTab, setActiveTab] = useState<string>("Standard");
   const [columnVisibilityMap, setColumnVisibilityMap] = useState<
     Record<string, VisibilityState>
@@ -183,7 +145,7 @@ export const Rewards: React.FC<{ data: RewardsDataType }> = ({ data }) => {
     [activeTab]
   );
 
-  if (rewardsData)
+  if (displayedRewards)
     return (
       <div className="flex flex-col h-screen p-4">
         <div className="flex justify-between mb-4">
@@ -266,7 +228,7 @@ export const Rewards: React.FC<{ data: RewardsDataType }> = ({ data }) => {
         <div className="flex-1 overflow-y-auto pb-12">
           <TableComponent
             columns={currentColumns}
-            data={rewardsData}
+            data={displayedRewards}
             columnVisibility={columnVisibilityMap[activeTab] || {}}
             setColumnVisibility={handleColumnVisibilityChange}
             filters={filterStates[activeTab] || []}
@@ -278,18 +240,5 @@ export const Rewards: React.FC<{ data: RewardsDataType }> = ({ data }) => {
       </div>
     );
 
-  return (
-    <div>
-      <h1>Rewards</h1>
-      <p>
-        This rewards include all the sats earned through Stacking starting with
-        POX-4 from all the stacking methods
-      </p>
-      <div>
-        Activation Burnchain Block Height: {activationBurnchainBlockHeight}
-      </div>
-      <div>Current Burnchain Block Height: {currentBurnchainBlockHeight}</div>
-      {/* Render additional data here */}
-    </div>
-  );
+    return null;
 };

@@ -24,7 +24,8 @@ export default function Home() {
       // TODO: Update with correct address according to network
       fetchRewardsData(
         // user?.btcAddress.p2wpkh.testnet || ""
-        "bc1qmv2pxw5ahvwsu94kq5f520jgkmljs3af8ly6tr",
+        // "bc1qmv2pxw5ahvwsu94kq5f520jgkmljs3af8ly6tr",
+        "1HZPdkmFNt53uYd9jihqL4B6YRy5MjVJNc",
         network,
         250
       ),
@@ -39,5 +40,5 @@ export default function Home() {
   }
   if (error) return <div>Error: {error.message}</div>;
   if (rewardsData === undefined) return null;
-  return <Rewards data={rewardsData} />;
+  return <Rewards rewardsData={rewardsData} />;
 }

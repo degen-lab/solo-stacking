@@ -21,6 +21,7 @@ export const getRewards = (
   practicalRewarded: PracticalRewardedInfo[],
   theoreticalRewarded: TheoreticalRewardedInfo[]
 ) => {
+  console.log("practical: ", practicalRewarded);
   let pIndex = 0;
   let tIndex = 0;
   const rewards: RewardInfo[] = [];

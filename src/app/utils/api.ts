@@ -3,6 +3,7 @@ import {
   API_BALANCES_URL,
   API_MEMPOOL_TRANSACTIONS_URL,
   API_POX_INFO_URL,
+  API_PRACTICAL_REWARDS_POX_URL,
   API_STACKER_INFO_URL,
   API_THEORETICAL_REWARDS_POX_URL,
 } from "../consts/api";
@@ -15,42 +16,40 @@ import { POX_4_FIRST_BURN_HEIGHT } from "./stacksUtils";
  * Reward slot holder on the burnchain
  */
 export interface BurnchainRewardSlotHolder {
-  /**
-   * Set to `true` if block corresponds to the canonical burchchain tip
-   */
   canonical: boolean;
-  /**
-   * The hash representing the burnchain block
-   */
   burn_block_hash: string;
-  /**
-   * Height of the burnchain block
-   */
   burn_block_height: number;
-  /**
-   * The recipient address that validly received PoX commitments, in the format native to the burnchain (e.g. B58 encoded for Bitcoin)
-   */
   address: string;
-  /**
-   * The index position of the reward entry, useful for ordering when there's more than one slot per burnchain block
-   */
   slot_index: number;
 }
 
 export interface BurnchainRewardSlotHolderListResponse {
-  /**
-   * The number of items to return
-   */
   limit: number;
-  /**
-   * The number of items to skip (starting at `0`)
-   */
   offset: number;
-  /**
-   * Total number of available items
-   */
   total: number;
   results: BurnchainRewardSlotHolder[];
+}
+
+/**
+ * GET request that returns blocks
+ */
+export interface BurnchainRewardListResponse {
+  limit: number;
+  offset: number;
+  results: BurnchainReward[];
+}
+
+/**
+ * Reward payment made on the burnchain
+ */
+export interface BurnchainReward {
+  canonical: boolean;
+  burn_block_hash: string;
+  burn_block_height: number;
+  burn_amount: string;
+  reward_recipient: string;
+  reward_amount: string;
+  reward_index: number;
 }
 
 export const fetchPoxInfo = async (network: Network): Promise<any> => {
@@ -73,12 +72,14 @@ export const fetchPoxInfo = async (network: Network): Promise<any> => {
   }
 };
 
-// TODO: Which user address to use?
-export const fetchAllTheoreticalRewards = async (
+export const fetchAllTheoreticalRewardsAndTotal = async (
   address: string,
   network: Network,
   limit: number
-): Promise<BurnchainRewardSlotHolder[]> => {
+): Promise<{
+  theoreticalRewardSlotsList: BurnchainRewardSlotHolder[];
+  totalRewardSlots: number;
+}> => {
   let offset = 0;
 
   const rewardsData = (
@@ -101,16 +102,17 @@ export const fetchAllTheoreticalRewards = async (
     if (response) {
       const roundResults: BurnchainRewardSlotHolder[] = [];
       response.results.forEach((result) => {
-        if (result.burn_block_height > POX_4_FIRST_BURN_HEIGHT[network]) {
-          roundResults.push(result);
+        if (!(result.burn_block_height > POX_4_FIRST_BURN_HEIGHT[network])) {
+          return;
         }
+        roundResults.push(result);
       });
       theoreticalRewardSlotsList.push(...roundResults);
     }
     offset += limit;
   }
 
-  return theoreticalRewardSlotsList;
+  return { theoreticalRewardSlotsList, totalRewardSlots: totalRewardSolts };
 };
 
 export const fetchTheoreticalRewards = async (
@@ -135,6 +137,74 @@ export const fetchTheoreticalRewards = async (
       }
     } else {
       console.error(`Error fetching Theoretical Rewards: ${error}`);
+    }
+    return null;
+  }
+};
+
+export const fetchAllPracticalRewards = async (
+  address: string,
+  network: Network,
+  limit: number,
+  maxRewardSlots: number
+): Promise<BurnchainReward[]> => {
+  let offset = 0;
+
+  const rewardsData = (
+    await axios.get<BurnchainRewardListResponse>(
+      API_PRACTICAL_REWARDS_POX_URL(address, network, offset, limit)
+    )
+  ).data;
+
+  console.log("rewards slots: ", rewardsData);
+  const practicalRewardSlotsList = [];
+
+  while (maxRewardSlots > offset) {
+    const response = await fetchPracticalRewards(
+      address,
+      network,
+      limit,
+      offset
+    );
+
+    if (response) {
+      const roundResults: BurnchainReward[] = [];
+      response.results.forEach((result) => {
+        if (!(result.burn_block_height > POX_4_FIRST_BURN_HEIGHT[network])) {
+          return;
+        }
+        roundResults.push(result);
+      });
+      practicalRewardSlotsList.push(...roundResults);
+    }
+    offset += limit;
+  }
+
+  return practicalRewardSlotsList;
+};
+
+export const fetchPracticalRewards = async (
+  address: string,
+  network: Network,
+  limit: number,
+  offset: number
+): Promise<BurnchainRewardListResponse | null> => {
+  try {
+    const response = await axios.get(
+      API_PRACTICAL_REWARDS_POX_URL(address, network, offset, limit)
+    );
+
+    return response.data;
+  } catch (error: any) {
+    if (error.response) {
+      if (error.response.status === 429) {
+        await new Promise((resolve) => setTimeout(resolve, 10000));
+        return fetchPracticalRewards(address, network, limit, offset);
+      } else {
+        console.error(`Error fetching Practical Rewards: ${error}`);
+      }
+    } else {
+      console.error(`Error fetching Practical Rewards: ${error}`);
     }
     return null;
   }

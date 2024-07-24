@@ -1,12 +1,14 @@
 import BigNumber from "bignumber.js";
 import { Network } from "../contexts/AuthContext";
 import {
-  fetchAllTheoreticalRewards,
+  BurnchainReward,
+  BurnchainRewardSlotHolder,
+  fetchAllPracticalRewards,
+  fetchAllTheoreticalRewardsAndTotal,
   fetchBalances,
   fetchMempoolTransactions,
   fetchPoxInfo,
   fetchStackerInfo,
-  fetchTheoreticalRewards,
 } from "./api";
 import {
   checkIsExtendInProgress,
@@ -167,22 +169,25 @@ export const fetchPoxUserData = async (
 };
 
 export type RewardsDataType = {
-  theoreticalRewards: any;
-  // practicalRewards: any;
+  theoreticalRewards: BurnchainRewardSlotHolder[];
+  practicalRewards: BurnchainReward[];
 };
 
-// FIXME: Add practical rewards
 export const fetchRewardsData = async (
   address: string,
   network: Network,
   limit: number
 ): Promise<RewardsDataType> => {
-  const theoreticalRewards = await fetchAllTheoreticalRewards(
+  const {
+    theoreticalRewardSlotsList: theoreticalRewards,
+    totalRewardSlots: totalTheoreticalRewards,
+  } = await fetchAllTheoreticalRewardsAndTotal(address, network, limit);
+  const practicalRewards = await fetchAllPracticalRewards(
     address,
     network,
-    limit
+    limit,
+    totalTheoreticalRewards
   );
-  // const practicalRewards = [];
 
-  return { theoreticalRewards };
+  return { theoreticalRewards, practicalRewards };
 };
