@@ -19,11 +19,11 @@ import {
   isValidStackStxAmount,
 } from "@/app/utils/validatorUtils";
 import CustomErrorMessage from "../ErrorMessage/CustomErrorMessage";
-import type { AllData } from "@/app/utils/queryFunctions";
+import type { PoxUserData } from "@/app/utils/queryFunctions";
 import { useDetailedView } from "@/app/contexts/DetailedViewContext";
 
 export const ActionStackStx: React.FC<{
-  data: AllData;
+  data: PoxUserData;
 }> = ({ data }) => {
   const { theme } = useTheme();
   const { btcAddress, network, btcNetwork } = useContext(AuthContext);

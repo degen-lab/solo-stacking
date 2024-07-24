@@ -1,10 +1,12 @@
 import BigNumber from "bignumber.js";
 import { Network } from "../contexts/AuthContext";
 import {
+  fetchAllTheoreticalRewards,
   fetchBalances,
   fetchMempoolTransactions,
   fetchPoxInfo,
   fetchStackerInfo,
+  fetchTheoreticalRewards,
 } from "./api";
 import {
   checkIsExtendInProgress,
@@ -89,7 +91,7 @@ type BalancesInfoType = {
   };
 };
 
-export type AllData = {
+export type PoxUserData = {
   poxInfo: PoxInfoType;
   balancesInfo: BalancesInfoType | null;
   mempoolTransactions: object | null;
@@ -102,10 +104,10 @@ export type AllData = {
   activationBurnchainBlockHeight: number;
 };
 
-export const fetchData = async (
+export const fetchPoxUserData = async (
   address: string | null,
   network: Network
-): Promise<AllData> => {
+): Promise<PoxUserData> => {
   const poxInfo = await fetchPoxInfo(network);
   const balancesInfo = address ? await fetchBalances(address, network) : null;
   const mempoolTransactions = address
@@ -162,4 +164,25 @@ export const fetchData = async (
     mempoolIncrease,
     activationBurnchainBlockHeight,
   };
+};
+
+export type RewardsDataType = {
+  theoreticalRewards: any;
+  // practicalRewards: any;
+};
+
+// FIXME: Add practical rewards
+export const fetchRewardsData = async (
+  address: string,
+  network: Network,
+  limit: number
+): Promise<RewardsDataType> => {
+  const theoreticalRewards = await fetchAllTheoreticalRewards(
+    address,
+    network,
+    limit
+  );
+  // const practicalRewards = [];
+
+  return { theoreticalRewards };
 };

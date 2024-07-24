@@ -12,10 +12,10 @@ import { Link } from "@nextui-org/react";
 import BigNumber from "bignumber.js";
 import { useAtom } from "jotai";
 import { useContext } from "react";
-import type { AllData } from "@/app/utils/queryFunctions";
+import type { PoxUserData } from "@/app/utils/queryFunctions";
 import { PoxDetailsStructure } from "./PoxDetailsStructure";
 
-export const AuthStackStxPoxDetails: React.FC<{ data: AllData }> = ({
+export const AuthStackStxPoxDetails: React.FC<{ data: PoxUserData }> = ({
   data,
 }) => {
   const { stxAddress: userAddress, network } = useContext(AuthContext);

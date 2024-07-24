@@ -1,6 +1,6 @@
 import BigNumber from "bignumber.js";
 import { fromBase58Check, fromBech32 } from "bitcoinjs-lib/src/address";
-import type { AllData } from "./queryFunctions";
+import type { PoxUserData } from "./queryFunctions";
 
 type IsValidFieldAndMessage = {
   valid: boolean;
@@ -9,7 +9,7 @@ type IsValidFieldAndMessage = {
 
 export const isValidStackStxAmount = (
   stackStxAmount: BigNumber,
-  data: AllData
+  data: PoxUserData
 ): IsValidFieldAndMessage => {
   if (stackStxAmount.lte(0))
     return { valid: false, message: "Please insert a valid amount." };
@@ -28,7 +28,7 @@ export const isValidStackStxAmount = (
 
 export const isValidStackIncreaseAmount = (
   stackIncreaseAmount: BigNumber,
-  data: AllData
+  data: PoxUserData
 ): IsValidFieldAndMessage => {
   console.log("stackIncreaseAmount", stackIncreaseAmount.toString());
   console.log("data.amountUpperLimit", data.amountUpperLimit.toString());
@@ -44,7 +44,7 @@ export const isValidStackIncreaseAmount = (
 
 export const isValidStackExtendCount = (
   stackExtendCount: number,
-  data: AllData
+  data: PoxUserData
 ): IsValidFieldAndMessage => {
   if (stackExtendCount < 1 || stackExtendCount > 12)
     return {
@@ -62,7 +62,7 @@ export const isValidStackExtendCount = (
 
 export const isValidNumCyclesAndMessage = (
   numCycles: number,
-  allData: AllData
+  allData: PoxUserData
 ): IsValidFieldAndMessage => {
   if (numCycles < 1 || numCycles > 12)
     return {

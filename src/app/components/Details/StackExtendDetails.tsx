@@ -13,11 +13,13 @@ import { Link } from "@nextui-org/react";
 import BigNumber from "bignumber.js";
 import { useAtom } from "jotai";
 import { useContext } from "react";
-import type { AllData } from "@/app/utils/queryFunctions";
+import type { PoxUserData } from "@/app/utils/queryFunctions";
 import { PoxDetailsStructure } from "./PoxDetailsStructure";
 import { getCurRewCycleFromData } from "@/app/utils/api";
 
-export const StackExtendDetails: React.FC<{ data: AllData }> = ({ data }) => {
+export const StackExtendDetails: React.FC<{ data: PoxUserData }> = ({
+  data,
+}) => {
   const { stxAddress: userAddress, network } = useContext(AuthContext);
 
   const [stackExtendCycles] = useAtom(stackExtendCyclesInput);

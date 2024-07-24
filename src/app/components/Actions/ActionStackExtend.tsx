@@ -12,7 +12,7 @@ import {
   // getStxFromUstxBN,
 } from "@/app/utils/stacksUtils";
 // import { displayAmount } from "@/app/utils/displayUtils";
-import type { AllData } from "@/app/utils/queryFunctions";
+import type { PoxUserData } from "@/app/utils/queryFunctions";
 import { isValidStackExtendCount } from "@/app/utils/validatorUtils";
 import CustomErrorMessage from "../ErrorMessage/CustomErrorMessage";
 import { useContext, useState } from "react";
@@ -22,7 +22,9 @@ import { AuthContext } from "@/app/contexts/AuthContext";
 import { useDetailedView } from "@/app/contexts/DetailedViewContext";
 import { getCurRewCycleFromData } from "@/app/utils/api";
 
-export const ActionStackExtend: React.FC<{ data: AllData }> = ({ data }) => {
+export const ActionStackExtend: React.FC<{ data: PoxUserData }> = ({
+  data,
+}) => {
   const { theme } = useTheme();
   const { detailedView } = useDetailedView();
   const { network } = useContext(AuthContext);

@@ -7,10 +7,10 @@ import {
 import { Button } from "@nextui-org/react";
 import BigNumber from "bignumber.js";
 import { useContext } from "react";
-import type { AllData } from "@/app/utils/queryFunctions";
+import type { PoxUserData } from "@/app/utils/queryFunctions";
 import { PoxDetailsStructure } from "./PoxDetailsStructure";
 
-export const NoAuthPoxDetails: React.FC<{ data: AllData }> = ({ data }) => {
+export const NoAuthPoxDetails: React.FC<{ data: PoxUserData }> = ({ data }) => {
   const { login } = useContext(AuthContext);
   const minThreshold = getStxThresholdFromData(data);
   const currentCycle = data.poxInfo.current_cycle.id;

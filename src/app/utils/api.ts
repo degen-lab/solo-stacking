@@ -8,7 +8,50 @@ import {
 } from "../consts/api";
 import { cvToHex, cvToJSON, hexToCV, principalCV } from "@stacks/transactions";
 import { Network } from "../contexts/AuthContext";
-import type { AllData } from "./queryFunctions";
+import type { PoxUserData } from "./queryFunctions";
+import { POX_4_FIRST_BURN_HEIGHT } from "./stacksUtils";
+
+/**
+ * Reward slot holder on the burnchain
+ */
+export interface BurnchainRewardSlotHolder {
+  /**
+   * Set to `true` if block corresponds to the canonical burchchain tip
+   */
+  canonical: boolean;
+  /**
+   * The hash representing the burnchain block
+   */
+  burn_block_hash: string;
+  /**
+   * Height of the burnchain block
+   */
+  burn_block_height: number;
+  /**
+   * The recipient address that validly received PoX commitments, in the format native to the burnchain (e.g. B58 encoded for Bitcoin)
+   */
+  address: string;
+  /**
+   * The index position of the reward entry, useful for ordering when there's more than one slot per burnchain block
+   */
+  slot_index: number;
+}
+
+export interface BurnchainRewardSlotHolderListResponse {
+  /**
+   * The number of items to return
+   */
+  limit: number;
+  /**
+   * The number of items to skip (starting at `0`)
+   */
+  offset: number;
+  /**
+   * Total number of available items
+   */
+  total: number;
+  results: BurnchainRewardSlotHolder[];
+}
 
 export const fetchPoxInfo = async (network: Network): Promise<any> => {
   try {
@@ -30,15 +73,55 @@ export const fetchPoxInfo = async (network: Network): Promise<any> => {
   }
 };
 
+// TODO: Which user address to use?
+export const fetchAllTheoreticalRewards = async (
+  address: string,
+  network: Network,
+  limit: number
+): Promise<BurnchainRewardSlotHolder[]> => {
+  let offset = 0;
+
+  const rewardsData = (
+    await axios.get<BurnchainRewardSlotHolderListResponse>(
+      API_THEORETICAL_REWARDS_POX_URL(address, network, offset, limit)
+    )
+  ).data;
+
+  const totalRewardSolts = rewardsData.total;
+  const theoreticalRewardSlotsList = [];
+
+  while (totalRewardSolts > offset) {
+    const response = await fetchTheoreticalRewards(
+      address,
+      network,
+      limit,
+      offset
+    );
+
+    if (response) {
+      const roundResults: BurnchainRewardSlotHolder[] = [];
+      response.results.forEach((result) => {
+        if (result.burn_block_height > POX_4_FIRST_BURN_HEIGHT[network]) {
+          roundResults.push(result);
+        }
+      });
+      theoreticalRewardSlotsList.push(...roundResults);
+    }
+    offset += limit;
+  }
+
+  return theoreticalRewardSlotsList;
+};
+
 export const fetchTheoreticalRewards = async (
   address: string,
   network: Network,
   limit: number,
   offset: number
-): Promise<any> => {
+): Promise<BurnchainRewardSlotHolderListResponse | null> => {
   try {
     const response = await axios.get(
-      API_THEORETICAL_REWARDS_POX_URL(address, network, limit, offset)
+      API_THEORETICAL_REWARDS_POX_URL(address, network, offset, limit)
     );
 
     return response.data;
@@ -203,7 +286,7 @@ export const parseNetwork = (
   network: "nakamoto-testnet" | "testnet" | "mainnet"
 ) => (network === "nakamoto-testnet" ? "nakamoto.testnet" : network);
 
-export const getCurRewCycleFromData = (data: AllData) => {
+export const getCurRewCycleFromData = (data: PoxUserData) => {
   if (!data) return null;
   return data.poxInfo.current_cycle.id;
 };

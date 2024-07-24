@@ -23,7 +23,7 @@ import {
 } from "@stacks/transactions";
 import BigNumber from "bignumber.js";
 import { getCurRewCycleFromData } from "./api";
-import type { AllData } from "./queryFunctions";
+import type { PoxUserData } from "./queryFunctions";
 
 export const callStackStx = async (
   topic: Pox4SignatureTopic,
@@ -31,7 +31,7 @@ export const callStackStx = async (
   period: number,
   maxAmountSTX: BigNumber,
   network: any,
-  data: AllData,
+  data: PoxUserData,
   onFinish: () => void
 ) => {
   const functionName = "stack-stx";
@@ -67,7 +67,7 @@ export const callStackStx = async (
 
 export const callStackIncrease = async (
   topic: Pox4SignatureTopic,
-  data: AllData,
+  data: PoxUserData,
   increaseAmountSTX: BigNumber,
   network: Network,
   onFinish: () => void
@@ -116,7 +116,7 @@ export const callStackIncrease = async (
 export const callStackExtend = async (
   topic: Pox4SignatureTopic,
   stackExtendNumCycles: number,
-  data: AllData,
+  data: PoxUserData,
   network: Network,
   onFinish: () => void
 ) => {
@@ -176,7 +176,7 @@ export const contractCall = (
   functionName: string,
   functionArgs: ClarityValue[],
   network: Network,
-  data: AllData,
+  data: PoxUserData,
   onFinish: () => void
 ) => {
   const poxAddress = poxScAddressFromPoxInfo(data);

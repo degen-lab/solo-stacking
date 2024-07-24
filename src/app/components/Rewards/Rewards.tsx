@@ -2,8 +2,14 @@ import {
   fetchActivationBurnchainBlockHeight,
   fetchCurrentBurnchainBlockHeight,
 } from "@/app/utils/api";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Network } from "@/app/contexts/AuthContext";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+import { AuthContext } from "@/app/contexts/AuthContext";
 import { theoreticalRewarded } from "./mockTheoretical";
 import { practicalRewarded } from "./mockPractical";
 import { getRewards } from "./wantedData";
@@ -16,10 +22,14 @@ import {
 import { columnsMap } from "../Table/ColumnDefinitions";
 import { CustomColumnDef, RowData } from "@/app/types/tableTypes";
 import { TableComponent } from "../Table/TableComponent";
+import { RewardsDataType } from "@/app/utils/queryFunctions";
 
-export const Rewards = () => {
-  const network = (process.env.NEXT_PUBLIC_NETWORK ||
-    "mainnet") as unknown as Network;
+export const Rewards: React.FC<{ data: RewardsDataType }> = ({ data }) => {
+  const { network } = useContext(AuthContext);
+  // TODO: Any strong reason to do this?
+  // = (process.env.NEXT_PUBLIC_NETWORK || "mainnet") as unknown as Network;
+  console.log("data:::", data);
+  const rewardsData = getRewards([], data.theoreticalRewards);
   const [activationBurnchainBlockHeight, setActivationBurnchainBlockHeight] =
     useState(null);
   const [currentBurnchainBlockHeight, setCurrentBurnchainBlockHeight] =
@@ -43,14 +53,6 @@ export const Rewards = () => {
 
     getCurrentBurnchainBlockHeight();
   }, [network]);
-
-  // const { data, error, isLoading } = useQuery({
-  //   queryKey: ["user-data", user?.stxAddress ? user.stxAddress : null, network],
-  //   queryFn: () => fetchActivationBurnchainBlockHeight(network),
-  //   refetchInterval: 10000,
-  // });
-  // if (isLoading) return <div>Loading...</div>;
-  // if (error) return <div>Error loading data</div>;
 
   // what was actually rewarded
   // ❯ curl -X GET "https://api.mainnet.hiro.so/extended/v1/burnchain/reward_slot_holders/1HZPdkmFNt53uYd9jihqL4B6YRy5MjVJNc"
@@ -76,14 +78,7 @@ export const Rewards = () => {
   );
   const [showColumnToggle, setShowColumnToggle] = useState(false);
 
-  // const { data, isLoading, error } = useFetchTableDataWithQuery(
-  //   SERVER_URL,
-  //   10000
-  // );
-  const data = getRewards(practicalRewarded, theoreticalRewarded);
-
   const currentColumns = useMemo(() => columnsMap[activeTab], [activeTab]);
-  // const currentData = useMemo(() => data ?? [], [data, activeTab]);
 
   const [zoomLevel, setZoomLevel] = useState(100);
   const defaultZoom = 100;
@@ -188,102 +183,100 @@ export const Rewards = () => {
     [activeTab]
   );
 
-  // if (isLoading) return <div>Loading...</div>;
-  // if (error) return <div>Error: {error.message}</div>;
-
-  return (
-    <div className="flex flex-col h-screen p-4">
-      <div className="flex justify-between mb-4">
-        <button
-          onClick={() => setShowColumnToggle(!showColumnToggle)}
-          className="bg-orange-500 hover:bg-orange-600 dark:bg-transparent dark:border dark:border-orange-500 dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-white text-white px-4 py-2 rounded-md transition-colors duration-200 ease-in-out"
-        >
-          {showColumnToggle ? "Hide" : "Show"} Column Visibility Settings
-        </button>
-        {showColumnToggle && (
-          <div className="flex overflow-x-auto space-x-4">
-            {currentColumns.map((column: CustomColumnDef<RowData>) => (
-              <label
-                key={column.accessorKey as string}
-                className="flex items-center space-x-2"
-              >
-                <input
-                  type="checkbox"
-                  checked={
-                    columnVisibilityMap[activeTab]?.[
-                      column.accessorKey as string
-                    ]
-                  }
-                  onChange={() =>
-                    handleColumnVisibilityChange((prev) => ({
-                      ...prev,
-                      [column.accessorKey as string]:
-                        !prev[column.accessorKey as string],
-                    }))
-                  }
-                />
-                <span>{column.header?.toString()}</span>
-              </label>
-            ))}
-          </div>
-        )}
-      </div>
-      <div className="flex space-x-2">
-        <button
-          onClick={zoomIn}
-          className="bg-orange-500 hover:bg-orange-600 dark:bg-transparent dark:border dark:border-orange-500 dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-white text-white px-4 py-2 rounded-md transition-colors duration-200 ease-in-out"
-        >
-          Zoom In
-        </button>
-        <button
-          onClick={zoomOut}
-          className="bg-orange-500 hover:bg-orange-600 dark:bg-transparent dark:border dark:border-orange-500 dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-white text-white px-4 py-2 rounded-md transition-colors duration-200 ease-in-out"
-        >
-          Zoom Out
-        </button>
-        <button
-          onClick={resetZoom}
-          className="bg-orange-500 hover:bg-orange-600 dark:bg-transparent dark:border dark:border-orange-500 dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-white text-white px-4 py-2 rounded-md transition-colors duration-200 ease-in-out"
-        >
-          Reset Zoom
-        </button>
-      </div>
-      <ul className="flex border-b mb-4 overflow-x-auto whitespace-nowrap">
-        {Object.keys(columnsMap).map((tab) => (
-          <li
-            key={tab}
-            onClick={() => handleTabChange(tab)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                handleTabChange(tab);
-              }
-            }}
-            role="tab"
-            tabIndex={0}
-            className={`cursor-pointer mr-4 px-4 py-2 text-center ${
-              activeTab === tab ? "border-b-2 border-black" : ""
-            }`}
+  if (rewardsData)
+    return (
+      <div className="flex flex-col h-screen p-4">
+        <div className="flex justify-between mb-4">
+          <button
+            onClick={() => setShowColumnToggle(!showColumnToggle)}
+            className="bg-orange-500 hover:bg-orange-600 dark:bg-transparent dark:border dark:border-orange-500 dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-white text-white px-4 py-2 rounded-md transition-colors duration-200 ease-in-out"
           >
-            {tab
-              .replace(/([A-Z])/g, " $1")
-              .replace(/^./, (str) => str.toUpperCase())}
-          </li>
-        ))}
-      </ul>
-      <div className="flex-1 overflow-y-auto pb-12">
-        <TableComponent
-          columns={currentColumns}
-          data={data}
-          columnVisibility={columnVisibilityMap[activeTab] || {}}
-          setColumnVisibility={handleColumnVisibilityChange}
-          filters={filterStates[activeTab] || []}
-          onFiltersChange={handleFilterChange}
-          sorting={sortStates[activeTab] || []}
-          onSortingChange={handleSortingChange}
-        />
+            {showColumnToggle ? "Hide" : "Show"} Column Visibility Settings
+          </button>
+          {showColumnToggle && (
+            <div className="flex overflow-x-auto space-x-4">
+              {currentColumns.map((column: CustomColumnDef<RowData>) => (
+                <label
+                  key={column.accessorKey as string}
+                  className="flex items-center space-x-2"
+                >
+                  <input
+                    type="checkbox"
+                    checked={
+                      columnVisibilityMap[activeTab]?.[
+                        column.accessorKey as string
+                      ]
+                    }
+                    onChange={() =>
+                      handleColumnVisibilityChange((prev) => ({
+                        ...prev,
+                        [column.accessorKey as string]:
+                          !prev[column.accessorKey as string],
+                      }))
+                    }
+                  />
+                  <span>{column.header?.toString()}</span>
+                </label>
+              ))}
+            </div>
+          )}
+        </div>
+        <div className="flex space-x-2">
+          <button
+            onClick={zoomIn}
+            className="bg-orange-500 hover:bg-orange-600 dark:bg-transparent dark:border dark:border-orange-500 dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-white text-white px-4 py-2 rounded-md transition-colors duration-200 ease-in-out"
+          >
+            Zoom In
+          </button>
+          <button
+            onClick={zoomOut}
+            className="bg-orange-500 hover:bg-orange-600 dark:bg-transparent dark:border dark:border-orange-500 dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-white text-white px-4 py-2 rounded-md transition-colors duration-200 ease-in-out"
+          >
+            Zoom Out
+          </button>
+          <button
+            onClick={resetZoom}
+            className="bg-orange-500 hover:bg-orange-600 dark:bg-transparent dark:border dark:border-orange-500 dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-white text-white px-4 py-2 rounded-md transition-colors duration-200 ease-in-out"
+          >
+            Reset Zoom
+          </button>
+        </div>
+        <ul className="flex border-b mb-4 overflow-x-auto whitespace-nowrap">
+          {Object.keys(columnsMap).map((tab) => (
+            <li
+              key={tab}
+              onClick={() => handleTabChange(tab)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  handleTabChange(tab);
+                }
+              }}
+              role="tab"
+              tabIndex={0}
+              className={`cursor-pointer mr-4 px-4 py-2 text-center ${
+                activeTab === tab ? "border-b-2 border-black" : ""
+              }`}
+            >
+              {tab
+                .replace(/([A-Z])/g, " $1")
+                .replace(/^./, (str) => str.toUpperCase())}
+            </li>
+          ))}
+        </ul>
+        <div className="flex-1 overflow-y-auto pb-12">
+          <TableComponent
+            columns={currentColumns}
+            data={rewardsData}
+            columnVisibility={columnVisibilityMap[activeTab] || {}}
+            setColumnVisibility={handleColumnVisibilityChange}
+            filters={filterStates[activeTab] || []}
+            onFiltersChange={handleFilterChange}
+            sorting={sortStates[activeTab] || []}
+            onSortingChange={handleSortingChange}
+          />
+        </div>
       </div>
-    </div>
-  );
+    );
 
   return (
     <div>

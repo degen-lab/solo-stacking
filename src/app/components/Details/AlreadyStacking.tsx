@@ -26,12 +26,12 @@ import BigNumber from "bignumber.js";
 import { useAtom } from "jotai";
 import { useTheme } from "next-themes";
 import { useContext } from "react";
-import type { AllData } from "@/app/utils/queryFunctions";
+import type { PoxUserData } from "@/app/utils/queryFunctions";
 import { getCurRewCycleFromData } from "@/app/utils/api";
 import { PoxDetailsStructure } from "./PoxDetailsStructure";
 
 export const AlreadyStacking: React.FC<{
-  data: AllData;
+  data: PoxUserData;
 }> = ({ data }) => {
   const { theme } = useTheme();
   const { network } = useContext(AuthContext);

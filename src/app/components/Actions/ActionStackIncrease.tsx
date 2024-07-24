@@ -12,7 +12,7 @@ import {
   getStxFromUstxBN,
 } from "@/app/utils/stacksUtils";
 import { displayAmount } from "@/app/utils/displayUtils";
-import type { AllData } from "@/app/utils/queryFunctions";
+import type { PoxUserData } from "@/app/utils/queryFunctions";
 import { useContext, useState } from "react";
 import { isValidStackIncreaseAmount } from "@/app/utils/validatorUtils";
 import { callStackIncrease } from "@/app/utils/contractCallUtils";
@@ -21,7 +21,9 @@ import { AuthContext } from "@/app/contexts/AuthContext";
 import CustomErrorMessage from "../ErrorMessage/CustomErrorMessage";
 import { useDetailedView } from "@/app/contexts/DetailedViewContext";
 
-export const ActionStackIncrease: React.FC<{ data: AllData }> = ({ data }) => {
+export const ActionStackIncrease: React.FC<{ data: PoxUserData }> = ({
+  data,
+}) => {
   const { theme } = useTheme();
   const { detailedView } = useDetailedView();
   const { network } = useContext(AuthContext);
