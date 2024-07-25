@@ -50,7 +50,8 @@ const AuthContextProvider: React.FC<{
   const { network } = useNetwork();
   const userSession = new UserSession({ appConfig });
 
-  const isAuthenticated = () => userSession.isUserSignedIn();
+  const isAuthenticated = () =>
+    userSession ? userSession.isUserSignedIn() : false;
 
   const walletProvider: "leather" | "xverse" = isAuthenticated()
     ? userSession.loadUserData().profile.walletProvider || "xverse"
