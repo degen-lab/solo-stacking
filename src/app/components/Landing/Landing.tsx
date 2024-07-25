@@ -1,6 +1,6 @@
 "use client";
 import { AuthContext } from "@/app/contexts/AuthContext";
-import { fetchData } from "@/app/utils/queryFunctions";
+import { fetchPoxUserData } from "@/app/utils/queryFunctions";
 import { useQuery } from "@tanstack/react-query";
 import { useContext, useEffect, useState } from "react";
 import { DisplayedPoxDetails } from "../Details/Details";
@@ -14,7 +14,7 @@ import {
   userStateAtom,
 } from "@/app/utils/atoms";
 import { useAtom } from "jotai";
-import type { AllData } from "@/app/utils/queryFunctions";
+import type { PoxUserData } from "@/app/utils/queryFunctions";
 import BigNumber from "bignumber.js";
 import { Spinner } from "@nextui-org/react";
 
@@ -23,7 +23,7 @@ export const Landing: React.FC = () => {
 
   const { data, error, isLoading } = useQuery({
     queryKey: ["user-data", user?.stxAddress ? user.stxAddress : null, network],
-    queryFn: () => fetchData(userAddress, network),
+    queryFn: () => fetchPoxUserData(userAddress, network),
     refetchInterval: 10000,
   });
 
@@ -46,7 +46,7 @@ export const Landing: React.FC = () => {
   );
 };
 
-export const Scenario: React.FC<{ data: AllData }> = ({ data }) => {
+export const Scenario: React.FC<{ data: PoxUserData }> = ({ data }) => {
   const { isAuthenticated, user, network } = useContext(AuthContext);
 
   const [userState, setUserState] = useAtom(userStateAtom);

@@ -1,6 +1,7 @@
 "use client";
 import { AppConfig, showConnect, UserSession } from "@stacks/connect";
 import { createContext, ReactNode } from "react";
+import { useNetwork } from "./NetworkContext";
 
 export type Network = "mainnet" | "nakamoto-testnet" | "testnet";
 
@@ -32,6 +33,7 @@ interface AuthContextInterface {
   userSession: UserSession;
   stxAddress: string | null;
   btcAddress: string | null;
+  walletProvider: ("leather" | "xverse") | undefined;
   isAuthenticated: () => boolean;
   login: () => void;
   logout: () => void;
@@ -45,10 +47,14 @@ const AuthContextProvider: React.FC<{
   children: ReactNode;
 }> = ({ children }) => {
   const appConfig = new AppConfig(["store_write", "publish_data"]);
-  const network = (process.env.NEXT_PUBLIC_NETWORK || "mainnet") as Network;
+  const { network } = useNetwork();
   const userSession = new UserSession({ appConfig });
 
   const isAuthenticated = () => userSession.isUserSignedIn();
+
+  const walletProvider: "leather" | "xverse" = isAuthenticated()
+    ? userSession.loadUserData().profile.walletProvider || "xverse"
+    : undefined;
 
   const user = isAuthenticated()
     ? {
@@ -61,10 +67,13 @@ const AuthContextProvider: React.FC<{
     ? user.stxAddress[network === "nakamoto-testnet" ? "testnet" : network]
     : null;
 
+  // TODO: Asigna?
   const btcAddress = user
-    ? user.btcAddress.p2wpkh[
-        network === "nakamoto-testnet" ? "testnet" : network
-      ]
+    ? walletProvider === "leather"
+      ? user.btcAddress.p2wpkh[
+          network === "nakamoto-testnet" ? "testnet" : network
+        ]
+      : user.btcAddress
     : null;
 
   // FIXME: Currently all Stacks networks work with the mainnet Bitcoin network.
@@ -98,6 +107,7 @@ const AuthContextProvider: React.FC<{
         btcNetwork,
         stxAddress,
         btcAddress,
+        walletProvider,
         isAuthenticated,
         login,
         logout,

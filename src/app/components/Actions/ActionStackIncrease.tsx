@@ -12,7 +12,7 @@ import {
   getStxFromUstxBN,
 } from "@/app/utils/stacksUtils";
 import { displayAmount } from "@/app/utils/displayUtils";
-import type { AllData } from "@/app/utils/queryFunctions";
+import type { PoxUserData } from "@/app/utils/queryFunctions";
 import { useContext, useState } from "react";
 import { isValidStackIncreaseAmount } from "@/app/utils/validatorUtils";
 import { callStackIncrease } from "@/app/utils/contractCallUtils";
@@ -21,7 +21,9 @@ import { AuthContext } from "@/app/contexts/AuthContext";
 import CustomErrorMessage from "../ErrorMessage/CustomErrorMessage";
 import { useDetailedView } from "@/app/contexts/DetailedViewContext";
 
-export const ActionStackIncrease: React.FC<{ data: AllData }> = ({ data }) => {
+export const ActionStackIncrease: React.FC<{ data: PoxUserData }> = ({
+  data,
+}) => {
   const { theme } = useTheme();
   const { detailedView } = useDetailedView();
   const { network } = useContext(AuthContext);
@@ -92,7 +94,7 @@ export const ActionStackIncrease: React.FC<{ data: AllData }> = ({ data }) => {
             Enter the amount of STX you want to add. You can use this feature if
             the slot threshold has increased or if you want to add more STX to
             earn extra slots for the next cycle. You can see how many additional
-            slots you'll get on the right side.
+            slots you’ll get on the right side.
           </p>
         </div>
       )}
@@ -124,9 +126,15 @@ export const ActionStackIncrease: React.FC<{ data: AllData }> = ({ data }) => {
               }
               className={
                 theme === "light"
-                  ? "text-action-dark bg-action-light mb-4 w-[8rem]"
-                  : "text-action-light bg-action-dark mb-4 w-[8rem]"
+                  ? "text-white bg-black mb-4 w-[8rem]"
+                  : "text-black bg-white mb-4 w-[8rem]"
               }
+              style={{
+                opacity: !isValidStackIncreaseAmount(stackIncreaseAmount, data)
+                  .valid
+                  ? "0.5"
+                  : "1",
+              }}
               onClick={() => handleStackIncreaseClick()}
             >
               Increase
@@ -136,8 +144,8 @@ export const ActionStackIncrease: React.FC<{ data: AllData }> = ({ data }) => {
             <Button
               className={
                 theme === "light"
-                  ? "text-action-dark bg-action-light mb-4 w-[8rem]"
-                  : "text-action-light bg-action-dark mb-4 w-[8rem]"
+                  ? "text-white bg-black mb-4 w-[8rem]"
+                  : "text-black bg-white mb-4 w-[8rem]"
               }
               onClick={() => setOpenIncreasePage(false)}
             >

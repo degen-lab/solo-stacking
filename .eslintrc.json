@@ -33,7 +33,9 @@
     ],
     "react/react-in-jsx-scope": "off",
     "react/jsx-filename-extension": [1, { "extensions": [".tsx"] }],
-    "jsx-a11y/anchor-is-valid": "off"
+    "jsx-a11y/anchor-is-valid": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/ban-ts-comment": "off"
   },
   "settings": {
     "react": {

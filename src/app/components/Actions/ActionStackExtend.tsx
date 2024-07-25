@@ -9,10 +9,10 @@ import { useTheme } from "next-themes";
 import {
   getLockedUstxFromData,
   getPeriodFromData,
-  getStxFromUstxBN,
+  // getStxFromUstxBN,
 } from "@/app/utils/stacksUtils";
-import { displayAmount } from "@/app/utils/displayUtils";
-import type { AllData } from "@/app/utils/queryFunctions";
+// import { displayAmount } from "@/app/utils/displayUtils";
+import type { PoxUserData } from "@/app/utils/queryFunctions";
 import { isValidStackExtendCount } from "@/app/utils/validatorUtils";
 import CustomErrorMessage from "../ErrorMessage/CustomErrorMessage";
 import { useContext, useState } from "react";
@@ -22,7 +22,9 @@ import { AuthContext } from "@/app/contexts/AuthContext";
 import { useDetailedView } from "@/app/contexts/DetailedViewContext";
 import { getCurRewCycleFromData } from "@/app/utils/api";
 
-export const ActionStackExtend: React.FC<{ data: AllData }> = ({ data }) => {
+export const ActionStackExtend: React.FC<{ data: PoxUserData }> = ({
+  data,
+}) => {
   const { theme } = useTheme();
   const { detailedView } = useDetailedView();
   const { network } = useContext(AuthContext);
@@ -133,9 +135,14 @@ export const ActionStackExtend: React.FC<{ data: AllData }> = ({ data }) => {
             disabled={!isValidStackExtendCount(stackExtendCycles, data).valid}
             className={
               theme === "light"
-                ? "text-action-dark bg-action-light mb-4 w-[8rem]"
-                : "text-action-light bg-action-dark mb-4 w-[8rem]"
+                ? "text-white bg-black mb-4 w-[8rem]"
+                : "text-black bg-white mb-4 w-[8rem]"
             }
+            style={{
+              opacity: !isValidStackExtendCount(stackExtendCycles, data).valid
+                ? "0.5"
+                : "1",
+            }}
             onClick={() => handleStackExtendClick()}
           >
             Extend
@@ -145,8 +152,8 @@ export const ActionStackExtend: React.FC<{ data: AllData }> = ({ data }) => {
           <Button
             className={
               theme === "light"
-                ? "text-action-dark bg-action-light mb-4 w-[8rem]"
-                : "text-action-light bg-action-dark mb-4 w-[8rem]"
+                ? "text-white bg-black mb-4 w-[8rem]"
+                : "text-black bg-white mb-4 w-[8rem]"
             }
             onClick={() => setOpenExtendPage(false)}
           >

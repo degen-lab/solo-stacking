@@ -4,13 +4,13 @@ import {
   userStateAtom,
 } from "@/app/utils/atoms";
 import { useAtom } from "jotai";
-import type { AllData } from "@/app/utils/queryFunctions";
+import type { PoxUserData } from "@/app/utils/queryFunctions";
 import { ActionStackStx } from "./ActionStackStx";
 import { ActionStackIncrease } from "./ActionStackIncrease";
 import { ActionStackExtend } from "./ActionStackExtend";
 
 export const ActionContainer: React.FC<{
-  data: AllData;
+  data: PoxUserData;
 }> = ({ data }) => {
   const [userState] = useAtom(userStateAtom);
   const [increasePageOpen] = useAtom(openIncreasePage);

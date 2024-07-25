@@ -12,10 +12,10 @@ import { Link } from "@nextui-org/react";
 import BigNumber from "bignumber.js";
 import { useAtom } from "jotai";
 import { useContext } from "react";
-import type { AllData } from "@/app/utils/queryFunctions";
+import type { PoxUserData } from "@/app/utils/queryFunctions";
 import { PoxDetailsStructure } from "./PoxDetailsStructure";
 
-export const AuthStackStxPoxDetails: React.FC<{ data: AllData }> = ({
+export const AuthStackStxPoxDetails: React.FC<{ data: PoxUserData }> = ({
   data,
 }) => {
   const { stxAddress: userAddress, network } = useContext(AuthContext);
@@ -38,9 +38,8 @@ export const AuthStackStxPoxDetails: React.FC<{ data: AllData }> = ({
   const currentCycle = data.poxInfo.current_cycle.id;
   return (
     <PoxDetailsStructure title="Overview">
-      <div className="font-bold text-lg">You will lock:</div>
       <div>
-        <span className="font-bold text-lg">Amount Locked: </span>
+        <span className="font-bold text-lg">You will lock: </span>
         {`${displayAmount(displayedStxAmount.toString())} STX`}
       </div>
       <div>

@@ -1,6 +1,7 @@
 import { Pox4SignatureTopic } from "@stacks/stacking";
 import axios from "axios";
 import BigNumber from "bignumber.js";
+import { Network } from "../contexts/AuthContext";
 
 export const methodToPox4Topic: Record<string, Pox4SignatureTopic> = {
   "stack-stx": Pox4SignatureTopic.StackStx,
@@ -18,16 +19,16 @@ export const getStackingSignature = (
   rewardCycle: number,
   period: number,
   maxAmount: BigNumber,
-  _network: any
+  network: Network
 ) => {
-  // TODO: link based on network
   const signature = axios
-    .post("http://localhost:8080/get-signature", {
+    .post("https://signature-be.degenlab.io/get-signature", {
       maxAmount,
       period,
       poxAddress,
       rewardCycle,
       topic,
+      network,
     })
     .then((response) => response.data);
 

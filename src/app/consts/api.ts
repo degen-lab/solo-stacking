@@ -13,6 +13,26 @@ export const API_POX_INFO_URL = (
   network: "nakamoto-testnet" | "testnet" | "mainnet"
 ) => `https://api.${parseNetwork(network)}.hiro.so/v2/pox`;
 
+export const API_PRACTICAL_REWARDS_POX_URL = (
+  address: string,
+  network: "nakamoto-testnet" | "testnet" | "mainnet",
+  offset: number,
+  limit: number
+) =>
+  `https://api.${parseNetwork(
+    network
+  )}.hiro.so/extended/v1/burnchain/rewards/${address}?offset=${offset}&limit=${limit}`;
+
+export const API_THEORETICAL_REWARDS_POX_URL = (
+  address: string,
+  network: "nakamoto-testnet" | "testnet" | "mainnet",
+  offset: number,
+  limit: number
+) =>
+  `https://api.${parseNetwork(
+    network
+  )}.hiro.so/extended/v1/burnchain/reward_slot_holders/${address}?offset=${offset}&limit=${limit}`;
+
 export const API_MEMPOOL_TRANSACTIONS_URL = (
   address: string,
   network: "nakamoto-testnet" | "testnet" | "mainnet"
@@ -48,3 +68,11 @@ export const MEMPOOL_URL_ADDRESS = (
   network === "mainnet"
     ? `https://mempool.space/address/${address}`
     : `https://mempool.space/testnet/address/${address}`;
+
+export const GET_BITCOIN_BLOCK_HASH_EXPLORER_URL = (
+  network: "nakamoto-testnet" | "testnet" | "mainnet",
+  hash: string
+) =>
+  network === "mainnet"
+    ? `https://mempool.space/block/${hash}`
+    : `https://mempool.space/testnet/block/${hash}`;

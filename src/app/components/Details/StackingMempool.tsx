@@ -5,11 +5,11 @@ import { getStxThresholdFromData } from "@/app/utils/stacksUtils";
 import { checkIsStackingInProgress } from "@/app/utils/userStateUtils";
 import { Link } from "@nextui-org/react";
 import { useContext } from "react";
-import type { AllData } from "@/app/utils/queryFunctions";
+import type { PoxUserData } from "@/app/utils/queryFunctions";
 import { PoxDetailsStructure } from "./PoxDetailsStructure";
 
 export const StackingMempool: React.FC<{
-  data: AllData;
+  data: PoxUserData;
 }> = ({ data }) => {
   const { network } = useContext(AuthContext);
 

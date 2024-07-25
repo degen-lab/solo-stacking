@@ -11,7 +11,24 @@ const config: Config = {
   ],
   darkMode: "class",
   plugins: [
-    nextui({}),
+    nextui({
+      addCommonColors: true,
+      defaultTheme: "light",
+      defaultExtendTheme: "dark",
+      layout: {},
+      themes: {
+        light: {
+          colors: {
+            primary: "#f97316",
+          },
+        },
+        dark: {
+          colors: {
+            primary: "#f97316",
+          },
+        },
+      },
+    }),
     plugin(function ({ addBase, theme }) {
       addBase({
         h1: { fontSize: theme("fontSize.2xl") },
@@ -21,10 +38,6 @@ const config: Config = {
     }),
   ],
   theme: {
-    colors: {
-      "action-dark": "white",
-      "action-light": "black",
-    },
     extend: {
       width: {
         "10vw": "10vw",
@@ -48,6 +61,13 @@ const config: Config = {
         "100vw": "100vw",
       },
       colors: {
+        extend: {
+          colors: {
+            orange: {
+              500: "#f97316",
+            },
+          },
+        },
         primary: {
           light: "#FA5512",
           dark: "#FA5512",

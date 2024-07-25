@@ -19,11 +19,11 @@ import {
   isValidStackStxAmount,
 } from "@/app/utils/validatorUtils";
 import CustomErrorMessage from "../ErrorMessage/CustomErrorMessage";
-import type { AllData } from "@/app/utils/queryFunctions";
+import type { PoxUserData } from "@/app/utils/queryFunctions";
 import { useDetailedView } from "@/app/contexts/DetailedViewContext";
 
 export const ActionStackStx: React.FC<{
-  data: AllData;
+  data: PoxUserData;
 }> = ({ data }) => {
   const { theme } = useTheme();
   const { btcAddress, network, btcNetwork } = useContext(AuthContext);
@@ -115,7 +115,7 @@ export const ActionStackStx: React.FC<{
           <p className="text-md mb-4 text-center text-[#909090] w-[75%]">
             You will earn one reward slot for every time you stack the minimum
             amount. Since this minimum can increase in steps of 10,000 STX each
-            cycle, it's a good idea to stack a bit extra to keep the same number
+            cycle, it’s a good idea to stack a bit extra to keep the same number
             of slots.
           </p>
         </div>
@@ -187,7 +187,7 @@ export const ActionStackStx: React.FC<{
       {detailedView && (
         <div className="flex justify-center">
           <p className="text-md mb-4 text-center text-[#909090] w-[75%]">
-            This is the Bitcoin address where you'll receive rewards from the
+            This is the Bitcoin address where you’ll receive rewards from the
             PoX mechanism. Rewards will be sent to this address as the cycle
             progresses.
           </p>
@@ -212,10 +212,9 @@ export const ActionStackStx: React.FC<{
         <Button
           disabled={isButtonDisabled()}
           className={
-            theme === "light"
-              ? "text-action-dark bg-action-light"
-              : "text-action-light bg-action-dark"
+            theme === "light" ? "text-white bg-black" : "text-black bg-white"
           }
+          style={{ opacity: isButtonDisabled() ? "0.5" : "1" }}
           onClick={handleStackButtonClick}
         >
           Stack

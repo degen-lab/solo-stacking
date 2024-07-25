@@ -3,7 +3,13 @@ import { bufferCV, optionalCVOf, uintCV } from "@stacks/transactions";
 import { Network } from "../contexts/AuthContext";
 import { StacksMainnet, StacksTestnet } from "@stacks/network";
 import BigNumber from "bignumber.js";
-import type { AllData } from "./queryFunctions";
+import type { PoxUserData } from "./queryFunctions";
+
+export const POX_4_FIRST_BURN_HEIGHT = {
+  "nakamoto-testnet": 245,
+  testnet: 6,
+  mainnet: 840361,
+};
 
 export const hexStringToUint8Array = (hexString: string) => {
   if (hexString.length % 2 !== 0) {
@@ -93,47 +99,48 @@ export const stacksNetworkFromStringNetwork = (network: Network) =>
     ? new StacksTestnet()
     : new StacksMainnet();
 
-export const poxContractFromData = (data: AllData) => data.poxInfo.contract_id;
+export const poxContractFromData = (data: PoxUserData) =>
+  data.poxInfo.contract_id;
 
-export const poxScAddressFromPoxInfo = (data: AllData) =>
+export const poxScAddressFromPoxInfo = (data: PoxUserData) =>
   data.poxInfo.contract_id.split(".")[0];
 
-export const poxScNameFromPoxInfo = (data: AllData) =>
+export const poxScNameFromPoxInfo = (data: PoxUserData) =>
   data.poxInfo.contract_id.split(".")[1];
 
-export const getUstxThresholdFromData = (data: AllData) =>
+export const getUstxThresholdFromData = (data: PoxUserData) =>
   BigNumber(data.poxInfo.next_cycle.min_threshold_ustx);
 
-export const getStxThresholdFromData = (data: AllData) =>
+export const getStxThresholdFromData = (data: PoxUserData) =>
   BigNumber(data.poxInfo.next_cycle.min_threshold_ustx).shiftedBy(-6);
 
 export const getStxFromUstxBN = (ustx: BigNumber) => ustx.shiftedBy(-6);
 
 export const getUstxFromStxBN = (stx: BigNumber) => stx.shiftedBy(6);
 
-export const getPeriodFromData = (data: AllData) =>
+export const getPeriodFromData = (data: PoxUserData) =>
   data.stackerInfo && data.stackerInfo.value
     ? parseInt(data.stackerInfo.value["lock-period"].value)
     : 0;
 
-export const getFirstLockedCycleFromData = (data: AllData) =>
+export const getFirstLockedCycleFromData = (data: PoxUserData) =>
   data.stackerInfo && data.stackerInfo.value
     ? parseInt(data.stackerInfo.value["first-reward-cycle"].value)
     : undefined;
 
-export const getEndCycleFromData = (data: AllData) => {
+export const getEndCycleFromData = (data: PoxUserData) => {
   const firstCycle = getFirstLockedCycleFromData(data);
   const lockPeriod = getPeriodFromData(data);
   return firstCycle ? firstCycle + lockPeriod : undefined;
 };
 
-export const getRemainingCyclesFromData = (data: AllData) => {
+export const getRemainingCyclesFromData = (data: PoxUserData) => {
   const currentCycle = data.poxInfo.current_cycle.id;
   const endCycle = getEndCycleFromData(data);
   return endCycle ? endCycle - currentCycle : undefined;
 };
 
-export const getBtcAddressFromData = (data: AllData, network: Network) => {
+export const getBtcAddressFromData = (data: PoxUserData, network: Network) => {
   if (!data.stackerInfo || !data.stackerInfo.value) return undefined;
 
   const poxAddress = data.stackerInfo.value["pox-addr"].value;
@@ -143,15 +150,15 @@ export const getBtcAddressFromData = (data: AllData, network: Network) => {
   return parsePoxAddress(version, hashbytes, network);
 };
 
-export const getLockPeriodFromData = (data: AllData) => {
+export const getLockPeriodFromData = (data: PoxUserData) => {
   if (!data.stackerInfo || !data.stackerInfo.value) return undefined;
   return parseInt(data.stackerInfo.value["lock-period"].value);
 };
 
-export const getLockedUstxFromData = (data: AllData) => {
+export const getLockedUstxFromData = (data: PoxUserData) => {
   if (!data.balancesInfo || !data.balancesInfo.stx) return undefined;
   return BigNumber(data.balancesInfo.stx.locked);
 };
 
-export const getCurBurnHeightFromData = (data: AllData) =>
+export const getCurBurnHeightFromData = (data: PoxUserData) =>
   data.poxInfo.current_burnchain_block_height;

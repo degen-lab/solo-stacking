@@ -6,6 +6,7 @@ import { explorerAddressUrl, getShorterAddress } from "../../utils";
 import { useMediaQuery } from "react-responsive";
 import Link from "next/link";
 import { useTheme } from "next-themes";
+import { LeavePage } from "../Images/LeavePage";
 
 export const UserAvatar = () => {
   const { login, isAuthenticated } = useContext(AuthContext);
@@ -54,8 +55,8 @@ export const UserAvatarSTXAddress = () => {
         <div
           className={
             theme === "light"
-              ? "rounded-xl border-2 p-2 bg-[#F5F5F5] border-[#F5F5F5]"
-              : "rounded-xl border-2 p-2 bg-[#3F3F3F] border-[#3F3F3F]"
+              ? "flex flex-row justify-center rounded-xl border-2 p-2 bg-[#F5F5F5] border-[#F5F5F5] text-black"
+              : "flex flex-row justify-center rounded-xl border-2 p-2 bg-[#3F3F3F] border-[#3F3F3F] text-white"
           }
           style={{ cursor: "pointer" }}
         >
@@ -66,9 +67,10 @@ export const UserAvatarSTXAddress = () => {
               ],
               network
             )}
+            className="flex items-center justify-center mr-1"
             target="new"
           >
-            <p className="text-black">
+            <p>
               {getShorterAddress(
                 user?.stxAddress[
                   network === "nakamoto-testnet" ? "testnet" : network
@@ -76,6 +78,7 @@ export const UserAvatarSTXAddress = () => {
               )}
             </p>
           </Link>
+          <LeavePage width={25} inverted={false}></LeavePage>
         </div>
       ) : (
         <div />

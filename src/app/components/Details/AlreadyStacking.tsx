@@ -26,12 +26,13 @@ import BigNumber from "bignumber.js";
 import { useAtom } from "jotai";
 import { useTheme } from "next-themes";
 import { useContext } from "react";
-import type { AllData } from "@/app/utils/queryFunctions";
+import type { PoxUserData } from "@/app/utils/queryFunctions";
 import { getCurRewCycleFromData } from "@/app/utils/api";
 import { PoxDetailsStructure } from "./PoxDetailsStructure";
+import { LeavePage } from "../Images/LeavePage";
 
 export const AlreadyStacking: React.FC<{
-  data: AllData;
+  data: PoxUserData;
 }> = ({ data }) => {
   const { theme } = useTheme();
   const { network } = useContext(AuthContext);
@@ -126,24 +127,26 @@ export const AlreadyStacking: React.FC<{
           <Button
             className={
               theme === "light"
-                ? "text-action-dark bg-action-light mb-4"
-                : "text-action-light bg-action-dark mb-4"
+                ? "text-white bg-black mb-4"
+                : "text-black bg-white mb-4"
             }
+            style={{ opacity: !mempoolIncreaseTxid ? "0.5" : "1" }}
           >
             <Link
               isDisabled={!mempoolIncreaseTxid}
               href={explorerTxUrl(mempoolIncreaseTxid, network)}
               target="new"
             >
-              Increase in progress...
+              <div>Increase in progress</div>
+              <LeavePage width={25} inverted={true}></LeavePage>
             </Link>
           </Button>
         ) : (
           <Button
             className={
               theme === "light"
-                ? "text-action-dark bg-action-light mb-4"
-                : "text-action-light bg-action-dark mb-4"
+                ? "text-white bg-black mb-4"
+                : "text-black bg-white mb-4"
             }
             onClick={() => setOpenIncreasePage(true)}
           >
@@ -154,24 +157,26 @@ export const AlreadyStacking: React.FC<{
           <Button
             className={
               theme === "light"
-                ? "text-action-dark bg-action-light mb-4"
-                : "text-action-light bg-action-dark mb-4"
+                ? "text-white bg-black mb-4"
+                : "text-black bg-white mb-4"
             }
+            style={{ opacity: !mempoolExtendTxid ? "0.5" : "1" }}
           >
             <Link
               isDisabled={!mempoolExtendTxid}
               href={explorerTxUrl(mempoolExtendTxid, network)}
               target="new"
             >
-              Extend in progress...
+              Extend in progress
             </Link>
+            <LeavePage width={25} inverted={true}></LeavePage>
           </Button>
         ) : (
           <Button
             className={
               theme === "light"
-                ? "text-action-dark bg-action-light mb-4"
-                : "text-action-light bg-action-dark mb-4"
+                ? "text-white bg-black mb-4"
+                : "text-black bg-white mb-4"
             }
             onClick={() => setOpenExtendPage(true)}
           >

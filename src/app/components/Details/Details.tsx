@@ -12,11 +12,11 @@ import { AuthStackStxPoxDetails } from "./AuthStackStxDetails";
 import { AlreadyStacking } from "./AlreadyStacking";
 import { StackIncreaseDetails } from "./StackIncreaseDetails";
 import { StackExtendDetails } from "./StackExtendDetails";
-import type { AllData } from "@/app/utils/queryFunctions";
+import type { PoxUserData } from "@/app/utils/queryFunctions";
 import { StackingMempool } from "./StackingMempool";
 
 export const DisplayedPoxDetails: React.FC<{
-  data: AllData;
+  data: PoxUserData;
 }> = ({ data }) => {
   const { user, network, isAuthenticated } = useContext(AuthContext);
 

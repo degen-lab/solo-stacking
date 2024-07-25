@@ -17,6 +17,7 @@ import { HamburgerDropdown } from "./Dropdown";
 import { ThemeSwitch } from "./ThemeSwitch";
 import { useTheme } from "next-themes";
 import { DetailedViewSwitch } from "./DetailedViewSwitch";
+import { NetworkDropdown } from "./NetworkDropdown";
 
 export interface NavbarItem {
   name: string;
@@ -59,11 +60,11 @@ export const NavbarSoloStacking = () => {
       </NavbarContent>
 
       <NavbarContent className="hidden md:flex" justify="end">
+        <NetworkDropdown></NetworkDropdown>
         <UserAvatar></UserAvatar>
         <HamburgerDropdown />
       </NavbarContent>
 
-      {/* TODO: Fix hamburger icon - Seems to be a NextUI bug */}
       <NavbarMenuToggle
         className={
           theme === "dark"
@@ -108,6 +109,9 @@ export const NavbarSoloStacking = () => {
               Connect Wallet
             </Button>
           )}
+        </NavbarMenuItem>
+        <NavbarMenuItem className="flex text-center justify-center">
+          <NetworkDropdown></NetworkDropdown>
         </NavbarMenuItem>
       </NavbarMenu>
     </Navbar>
