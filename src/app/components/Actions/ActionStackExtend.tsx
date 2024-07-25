@@ -135,9 +135,14 @@ export const ActionStackExtend: React.FC<{ data: PoxUserData }> = ({
             disabled={!isValidStackExtendCount(stackExtendCycles, data).valid}
             className={
               theme === "light"
-                ? "text-action-dark bg-action-light mb-4 w-[8rem]"
-                : "text-action-light bg-action-dark mb-4 w-[8rem]"
+                ? "text-white bg-black mb-4 w-[8rem]"
+                : "text-black bg-white mb-4 w-[8rem]"
             }
+            style={{
+              opacity: !isValidStackExtendCount(stackExtendCycles, data).valid
+                ? "0.5"
+                : "1",
+            }}
             onClick={() => handleStackExtendClick()}
           >
             Extend
@@ -147,8 +152,8 @@ export const ActionStackExtend: React.FC<{ data: PoxUserData }> = ({
           <Button
             className={
               theme === "light"
-                ? "text-action-dark bg-action-light mb-4 w-[8rem]"
-                : "text-action-light bg-action-dark mb-4 w-[8rem]"
+                ? "text-white bg-black mb-4 w-[8rem]"
+                : "text-black bg-white mb-4 w-[8rem]"
             }
             onClick={() => setOpenExtendPage(false)}
           >

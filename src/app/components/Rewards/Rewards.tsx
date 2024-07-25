@@ -1,6 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { theoreticalRewarded } from "./mockTheoretical";
-import { practicalRewarded } from "./mockPractical";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { getRewards } from "./wantedData";
 import {
   ColumnFiltersState,
@@ -8,14 +12,30 @@ import {
   SortingState,
   VisibilityState,
 } from "@tanstack/react-table";
-import { columnsMap } from "../Table/ColumnDefinitions";
+import { getColumnsMap } from "../Table/ColumnDefinitions";
 import { CustomColumnDef, RowData } from "@/app/types/tableTypes";
 import { TableComponent } from "../Table/TableComponent";
 import { RewardsDataType } from "@/app/utils/queryFunctions";
+import { useTheme } from "next-themes";
+import { Button } from "@nextui-org/react";
+import { useRouter } from "next/navigation";
+import { AuthContext } from "@/app/contexts/AuthContext";
 
 export const Rewards: React.FC<{ rewardsData: RewardsDataType }> = ({
   rewardsData,
 }) => {
+  const { theme } = useTheme();
+  const { isAuthenticated } = useContext(AuthContext);
+
+  const router = useRouter();
+  useEffect(() => {
+    if (!isAuthenticated()) {
+      router.push("/");
+    }
+  }, [isAuthenticated, router]);
+
+  if (!theme || (theme !== "dark" && theme !== "light"))
+    throw new Error("Invalid Theme State");
   console.log("data:::", rewardsData);
   const [displayedRewards, setDisplayedRewards] = useState<RowData[]>([]);
   useEffect(() => {
@@ -40,7 +60,10 @@ export const Rewards: React.FC<{ rewardsData: RewardsDataType }> = ({
   );
   const [showColumnToggle, setShowColumnToggle] = useState(false);
 
-  const currentColumns = useMemo(() => columnsMap[activeTab], [activeTab]);
+  const currentColumns = useMemo(
+    () => getColumnsMap(theme)[activeTab],
+    [activeTab]
+  );
 
   const [zoomLevel, setZoomLevel] = useState(100);
   const defaultZoom = 100;
@@ -72,13 +95,13 @@ export const Rewards: React.FC<{ rewardsData: RewardsDataType }> = ({
     }
 
     const initialStates: Record<string, InitialState> = {};
-    Object.keys(columnsMap).forEach((tab) => {
+    Object.keys(getColumnsMap(theme)).forEach((tab) => {
       initialStates[tab] = {
         visibility: {},
         filters: [],
         sorting: [],
       };
-      columnsMap[tab].forEach((column) => {
+      getColumnsMap(theme)[tab].forEach((column) => {
         initialStates[tab].visibility[column.accessorKey as string] = true;
       });
     });
@@ -149,12 +172,14 @@ export const Rewards: React.FC<{ rewardsData: RewardsDataType }> = ({
     return (
       <div className="flex flex-col h-screen p-4">
         <div className="flex justify-between mb-4">
-          <button
+          <Button
             onClick={() => setShowColumnToggle(!showColumnToggle)}
-            className="bg-orange-500 hover:bg-orange-600 dark:bg-transparent dark:border dark:border-orange-500 dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-white text-white px-4 py-2 rounded-md transition-colors duration-200 ease-in-out"
+            color="primary"
+            variant="ghost"
+            className="hover:text-white"
           >
             {showColumnToggle ? "Hide" : "Show"} Column Visibility Settings
-          </button>
+          </Button>
           {showColumnToggle && (
             <div className="flex overflow-x-auto space-x-4">
               {currentColumns.map((column: CustomColumnDef<RowData>) => (
@@ -184,27 +209,33 @@ export const Rewards: React.FC<{ rewardsData: RewardsDataType }> = ({
           )}
         </div>
         <div className="flex space-x-2">
-          <button
+          <Button
             onClick={zoomIn}
-            className="bg-orange-500 hover:bg-orange-600 dark:bg-transparent dark:border dark:border-orange-500 dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-white text-white px-4 py-2 rounded-md transition-colors duration-200 ease-in-out"
+            color="primary"
+            variant="ghost"
+            className="hover:text-white"
           >
             Zoom In
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={zoomOut}
-            className="bg-orange-500 hover:bg-orange-600 dark:bg-transparent dark:border dark:border-orange-500 dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-white text-white px-4 py-2 rounded-md transition-colors duration-200 ease-in-out"
+            color="primary"
+            variant="ghost"
+            className="hover:text-white"
           >
             Zoom Out
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={resetZoom}
-            className="bg-orange-500 hover:bg-orange-600 dark:bg-transparent dark:border dark:border-orange-500 dark:text-orange-500 dark:hover:bg-orange-500 dark:hover:text-white text-white px-4 py-2 rounded-md transition-colors duration-200 ease-in-out"
+            color="primary"
+            variant="ghost"
+            className="hover:text-white"
           >
             Reset Zoom
-          </button>
+          </Button>
         </div>
         <ul className="flex border-b mb-4 overflow-x-auto whitespace-nowrap">
-          {Object.keys(columnsMap).map((tab) => (
+          {Object.keys(getColumnsMap(theme)).map((tab) => (
             <li
               key={tab}
               onClick={() => handleTabChange(tab)}
@@ -240,5 +271,5 @@ export const Rewards: React.FC<{ rewardsData: RewardsDataType }> = ({
       </div>
     );
 
-    return null;
+  return null;
 };

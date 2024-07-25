@@ -60,12 +60,12 @@ export const Filter: React.FC<FilterProps<RowData>> = ({ column }) => {
       className="mt-2"
     >
       {column.columnDef.filterType === "number" ? (
-        <div className="flex space-x-2">
-          {renderInput("Min", 0)}
-          {renderInput("Max", 1)}
+        <div className="flex flex-col space-y-2">
+          {renderInput(" Min", 0)}
+          {renderInput(" Max", 1)}
         </div>
       ) : (
-        renderInput("Search...", 0)
+        renderInput(" Search...", 0)
       )}
     </div>
   );

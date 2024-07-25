@@ -38,9 +38,8 @@ export const AuthStackStxPoxDetails: React.FC<{ data: PoxUserData }> = ({
   const currentCycle = data.poxInfo.current_cycle.id;
   return (
     <PoxDetailsStructure title="Overview">
-      <div className="font-bold text-lg">You will lock:</div>
       <div>
-        <span className="font-bold text-lg">Amount Locked: </span>
+        <span className="font-bold text-lg">You will lock: </span>
         {`${displayAmount(displayedStxAmount.toString())} STX`}
       </div>
       <div>

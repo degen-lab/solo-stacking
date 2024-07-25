@@ -126,9 +126,10 @@ export const AlreadyStacking: React.FC<{
           <Button
             className={
               theme === "light"
-                ? "text-action-dark bg-action-light mb-4"
-                : "text-action-light bg-action-dark mb-4"
+                ? "text-white bg-black mb-4"
+                : "text-black bg-white mb-4"
             }
+            style={{ opacity: !mempoolIncreaseTxid ? "0.5" : "1" }}
           >
             <Link
               isDisabled={!mempoolIncreaseTxid}
@@ -142,8 +143,8 @@ export const AlreadyStacking: React.FC<{
           <Button
             className={
               theme === "light"
-                ? "text-action-dark bg-action-light mb-4"
-                : "text-action-light bg-action-dark mb-4"
+                ? "text-white bg-black mb-4"
+                : "text-black bg-white mb-4"
             }
             onClick={() => setOpenIncreasePage(true)}
           >
@@ -154,9 +155,10 @@ export const AlreadyStacking: React.FC<{
           <Button
             className={
               theme === "light"
-                ? "text-action-dark bg-action-light mb-4"
-                : "text-action-light bg-action-dark mb-4"
+                ? "text-white bg-black mb-4"
+                : "text-black bg-white mb-4"
             }
+            style={{ opacity: !mempoolExtendTxid ? "0.5" : "1" }}
           >
             <Link
               isDisabled={!mempoolExtendTxid}
@@ -170,8 +172,8 @@ export const AlreadyStacking: React.FC<{
           <Button
             className={
               theme === "light"
-                ? "text-action-dark bg-action-light mb-4"
-                : "text-action-light bg-action-dark mb-4"
+                ? "text-white bg-black mb-4"
+                : "text-black bg-white mb-4"
             }
             onClick={() => setOpenExtendPage(true)}
           >

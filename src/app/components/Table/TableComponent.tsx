@@ -1,4 +1,3 @@
-import { isCustomColumn, TableComponentProps } from "@/app/types/tableTypes";
 import {
   flexRender,
   getCoreRowModel,
@@ -6,6 +5,8 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { useTheme } from "next-themes";
+import { isCustomColumn, TableComponentProps } from "@/app/types/tableTypes";
 import { Filter } from "./Filter";
 
 export const TableComponent: React.FC<TableComponentProps> = ({
@@ -33,20 +34,30 @@ export const TableComponent: React.FC<TableComponentProps> = ({
     getSortedRowModel: getSortedRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
   });
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
 
   return (
     <div className="overflow-x-auto">
-      <table className="min-w-full bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-700">
+      <table
+        className={`min-w-full ${
+          isDark ? "bg-neutral-900" : "bg-white"
+        } border ${isDark ? "border-neutral-700" : "border-gray-200"}`}
+      >
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
             <tr
               key={headerGroup.id}
-              className="bg-gray-100 dark:bg-neutral-900"
+              className={`${isDark ? "bg-neutral-900" : "bg-gray-100"}`}
             >
               {headerGroup.headers.map((header) => (
                 <th
                   key={header.id}
-                  className="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider border-b border-r border-gray-200 dark:border-neutral-600 cursor-pointer"
+                  className={`px-6 py-3 text-center font-medium ${
+                    isDark ? "text-gray-300" : "text-gray-500"
+                  }  tracking-wider border-b border-r ${
+                    isDark ? "border-neutral-600" : "border-gray-200"
+                  } cursor-pointer`}
                   onClick={header.column.getToggleSortingHandler()}
                 >
                   <div className="flex flex-col items-center justify-center">
@@ -74,12 +85,18 @@ export const TableComponent: React.FC<TableComponentProps> = ({
             table.getRowModel().rows.map((row) => (
               <tr
                 key={row.id}
-                className="bg-white dark:bg-neutral-900 odd:bg-gray-50 dark:odd:bg-zinc-900"
+                className={`${isDark ? "bg-neutral-900" : "bg-white"} ${
+                  isDark ? "odd:bg-zinc-800" : "odd:bg-gray-50"
+                }`}
               >
                 {row.getVisibleCells().map((cell) => (
                   <td
                     key={cell.id}
-                    className="px-6 py-4 text-sm text-gray-500 dark:text-gray-300 border-b border-r border-gray-200 dark:border-neutral-600 text-center"
+                    className={`px-6 py-4 text-sm ${
+                      isDark ? "text-gray-300" : "text-gray-500"
+                    } border-b border-r ${
+                      isDark ? "border-neutral-600" : "border-gray-200"
+                    } text-center`}
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </td>
@@ -90,7 +107,11 @@ export const TableComponent: React.FC<TableComponentProps> = ({
             <tr>
               <td
                 colSpan={columns.length}
-                className="px-6 py-4 text-sm text-gray-500 dark:text-gray-300 border-b border-r border-gray-200 dark:border-neutral-600 text-center"
+                className={`px-6 py-4 text-sm ${
+                  isDark ? "text-gray-300" : "text-gray-500"
+                } border-b border-r ${
+                  isDark ? "border-neutral-600" : "border-gray-200"
+                } text-center`}
               >
                 No data available
               </td>

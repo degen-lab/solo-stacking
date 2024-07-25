@@ -51,11 +51,11 @@ export const UserAvatarSTXAddress = () => {
   return (
     <div>
       {isAuthenticated() && user ? (
-        <div
+        <div // TODO: add svg to showcase clickable button to explorer
           className={
             theme === "light"
-              ? "rounded-xl border-2 p-2 bg-[#F5F5F5] border-[#F5F5F5]"
-              : "rounded-xl border-2 p-2 bg-[#3F3F3F] border-[#3F3F3F]"
+              ? "rounded-xl border-2 p-2 bg-[#F5F5F5] border-[#F5F5F5] text-black"
+              : "rounded-xl border-2 p-2 bg-[#3F3F3F] border-[#3F3F3F] text-white"
           }
           style={{ cursor: "pointer" }}
         >
@@ -68,7 +68,7 @@ export const UserAvatarSTXAddress = () => {
             )}
             target="new"
           >
-            <p className="text-black">
+            <p>
               {getShorterAddress(
                 user?.stxAddress[
                   network === "nakamoto-testnet" ? "testnet" : network

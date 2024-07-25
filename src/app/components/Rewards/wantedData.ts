@@ -62,7 +62,7 @@ export const getRewards = (
       const aux: RewardInfo = {
         ...theoreticalRewarded[tIndex],
         reward_amount: 0,
-        canonical: practicalRewarded[tIndex].canonical.toString(),
+        canonical: theoreticalRewarded[tIndex].canonical.toString(),
       };
       rewards.push(aux);
       tIndex++;

@@ -1,14 +1,22 @@
 "use client";
 
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { Rewards } from "../components/Rewards/Rewards";
 import { AuthContext } from "../contexts/AuthContext";
 import { useQuery } from "@tanstack/react-query";
 import { fetchRewardsData } from "../utils/queryFunctions";
 import { Spinner } from "@nextui-org/react";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
-  const { user, network } = useContext(AuthContext);
+  const { user, network, isAuthenticated } = useContext(AuthContext);
+
+  const router = useRouter();
+  useEffect(() => {
+    if (!isAuthenticated()) {
+      router.push("/");
+    }
+  }, [isAuthenticated, router]);
 
   const {
     data: rewardsData,
@@ -20,17 +28,23 @@ export default function Home() {
       user?.stxAddress ? user.stxAddress : null,
       network,
     ],
-    queryFn: () =>
+    queryFn: () => {
       // TODO: Update with correct address according to network
-      fetchRewardsData(
-        // user?.btcAddress.p2wpkh.testnet || ""
-        // "bc1qmv2pxw5ahvwsu94kq5f520jgkmljs3af8ly6tr",
-        "1HZPdkmFNt53uYd9jihqL4B6YRy5MjVJNc",
-        network,
-        250
-      ),
+      if (isAuthenticated()) {
+        return fetchRewardsData(
+          // user?.btcAddress.p2wpkh.testnet || ""
+          // "bc1qmv2pxw5ahvwsu94kq5f520jgkmljs3af8ly6tr",
+          "1HZPdkmFNt53uYd9jihqL4B6YRy5MjVJNc",
+          network,
+          250
+        );
+      } else {
+        return { theoreticalRewards: [], practicalRewards: [] };
+      }
+    },
     refetchInterval: 10000,
   });
+
   if (isLoading) {
     return (
       <div className="flex h-screen justify-center">

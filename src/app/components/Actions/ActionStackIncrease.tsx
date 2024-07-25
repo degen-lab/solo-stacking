@@ -126,9 +126,15 @@ export const ActionStackIncrease: React.FC<{ data: PoxUserData }> = ({
               }
               className={
                 theme === "light"
-                  ? "text-action-dark bg-action-light mb-4 w-[8rem]"
-                  : "text-action-light bg-action-dark mb-4 w-[8rem]"
+                  ? "text-white bg-black mb-4 w-[8rem]"
+                  : "text-black bg-white mb-4 w-[8rem]"
               }
+              style={{
+                opacity: !isValidStackIncreaseAmount(stackIncreaseAmount, data)
+                  .valid
+                  ? "0.5"
+                  : "1",
+              }}
               onClick={() => handleStackIncreaseClick()}
             >
               Increase
@@ -138,8 +144,8 @@ export const ActionStackIncrease: React.FC<{ data: PoxUserData }> = ({
             <Button
               className={
                 theme === "light"
-                  ? "text-action-dark bg-action-light mb-4 w-[8rem]"
-                  : "text-action-light bg-action-dark mb-4 w-[8rem]"
+                  ? "text-white bg-black mb-4 w-[8rem]"
+                  : "text-black bg-white mb-4 w-[8rem]"
               }
               onClick={() => setOpenIncreasePage(false)}
             >

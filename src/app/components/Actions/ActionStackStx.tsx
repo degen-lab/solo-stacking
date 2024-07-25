@@ -212,10 +212,9 @@ export const ActionStackStx: React.FC<{
         <Button
           disabled={isButtonDisabled()}
           className={
-            theme === "light"
-              ? "text-action-dark bg-action-light"
-              : "text-action-light bg-action-dark"
+            theme === "light" ? "text-white bg-black" : "text-black bg-white"
           }
+          style={{ opacity: isButtonDisabled() ? "0.5" : "1" }}
           onClick={handleStackButtonClick}
         >
           Stack

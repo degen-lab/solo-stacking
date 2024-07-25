@@ -3,69 +3,35 @@ import { formatNumber, shortenAddress } from "@/app/utils/formatters";
 import {
   GET_BITCOIN_ADDRESS_EXPLORER_URL,
   GET_STACKS_BLOCK_HASH_EXPLORER_URL,
-  // GET_STACKS_ADDRESS_EXPLORER_URL,
-  // GET_TRANSACTION_EXPLORER_URL,
 } from "@/app/consts/urls";
 
-// const createStackerColumn = (): CustomColumnDef<RowData> => ({
-//   header: "Stacker",
-//   accessorKey: "stacker",
-//   filterType: "text",
-//   cell: ({ getValue }) => {
-//     const stacker = getValue<string>();
-//     const shortStacker = shortenAddress(stacker);
-//     return (
-//       <a
-//         href={GET_STACKS_ADDRESS_EXPLORER_URL(stacker)}
-//         target="_blank"
-//         rel="noopener noreferrer"
-//         className="text-purple-600 dark:text-purple-400 hover:underline"
-//       >
-//         {shortStacker}
-//       </a>
-//     );
-//   },
-// });
-
-const createBitcoinAddressColumn = (): CustomColumnDef<RowData> => ({
+const createBitcoinAddressColumn = (
+  theme: "dark" | "light"
+): CustomColumnDef<RowData> => ({
   header: "Address",
   accessorKey: "address",
   filterType: "text",
   cell: ({ getValue }) => {
     const poxAddress = getValue<string>();
     const shortPoxAddress = shortenAddress(poxAddress);
+    const isDark = theme === "dark";
+
     return (
       <a
         href={GET_BITCOIN_ADDRESS_EXPLORER_URL(poxAddress)}
         target="_blank"
         rel="noopener noreferrer"
-        className="text-orange-600 dark:text-orange-400 hover:underline"
+        className={
+          isDark
+            ? "text-orange-400 hover:underline"
+            : "text-orange-600 hover:underline"
+        }
       >
         {shortPoxAddress}
       </a>
     );
   },
 });
-
-// const createTransactionColumn = (): CustomColumnDef<RowData> => ({
-//   header: "Transaction ID",
-//   accessorKey: "txid",
-//   filterType: "text",
-//   cell: ({ getValue }) => {
-//     const poxAddress = getValue<string>();
-//     const shortPoxAddress = shortenAddress(poxAddress);
-//     return (
-//       <a
-//         href={GET_TRANSACTION_EXPLORER_URL(poxAddress)}
-//         target="_blank"
-//         rel="noopener noreferrer"
-//         className="text-purple-600 dark:text-purple-400 hover:underline"
-//       >
-//         {shortPoxAddress}
-//       </a>
-//     );
-//   },
-// });
 
 const createAmountSatsColumn = (): CustomColumnDef<RowData> => ({
   header: "Amount",
@@ -77,7 +43,7 @@ const createAmountSatsColumn = (): CustomColumnDef<RowData> => ({
 const createBurnBlockHeightColumn = (): CustomColumnDef<RowData> => ({
   header: "Burn Block Height",
   accessorKey: "burn_block_height",
-  filterType: "number", // TODO: ad link to block hash through explorer
+  filterType: "number",
 });
 
 // TODO: create function to convert to equivalent in $
@@ -90,19 +56,26 @@ const createCanonicalColumn = (): CustomColumnDef<RowData> => ({
   filterType: "text",
 });
 
-const createBurnBlockHashColumn = (): CustomColumnDef<RowData> => ({
+const createBurnBlockHashColumn = (
+  theme: "dark" | "light"
+): CustomColumnDef<RowData> => ({
   header: "Burn Block Hash",
   accessorKey: "burn_block_hash",
   filterType: "text",
   cell: ({ getValue }) => {
     const blockHash = getValue<string>();
     const shortBlockHash = shortenAddress(blockHash, 5);
+    const isDark = theme === "dark";
     return (
       <a
         href={GET_STACKS_BLOCK_HASH_EXPLORER_URL(blockHash)}
         target="_blank"
         rel="noopener noreferrer"
-        className="text-purple-600 dark:text-orange-400 hover:underline"
+        className={
+          isDark
+            ? "text-purple-400 hover:underline"
+            : "text-purple-600 hover:underline"
+        }
       >
         {shortBlockHash}
       </a>
@@ -128,20 +101,22 @@ const createSlotIndexColumn = (): CustomColumnDef<RowData> => ({
   filterType: "number",
 });
 
-export const columnsMap: Record<string, CustomColumnDef<RowData>[]> = {
+export const getColumnsMap = (
+  theme: "dark" | "light"
+): Record<string, CustomColumnDef<RowData>[]> => ({
   Standard: [
-    createBitcoinAddressColumn(),
+    createBitcoinAddressColumn(theme),
     createBurnBlockHeightColumn(),
     createAmountSatsColumn(),
   ],
   Detailed: [
-    createBitcoinAddressColumn(),
+    createBitcoinAddressColumn(theme),
     createAmountSatsColumn(),
     createBurnBlockHeightColumn(),
     createCanonicalColumn(),
-    createBurnBlockHashColumn(),
+    createBurnBlockHashColumn(theme),
     createBurnAmountColumn(),
     createRewardIndexColumn(),
     createSlotIndexColumn(),
   ],
-};
+});
