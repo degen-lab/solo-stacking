@@ -50,7 +50,7 @@ const API_CONFIG = {
       return `https://explorer.hiro.so/txid/${txid}?chain=testnet&api=https://api.nakamoto.testnet.hiro.so`;
     },
     GET_BITCOIN_ADDRESS_EXPLORER_URL(address: string): string {
-      return `https://mempool.space/testnet/address/${address}`; // TODO: replace this
+      return `https://mempool.space/testnet/address/${address}`; // TODO: delete what is not used
     },
 
     GET_BITCOIN_BLOCK_HASH_EXPLORER_URL(hash: string): string {

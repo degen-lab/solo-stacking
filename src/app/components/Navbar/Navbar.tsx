@@ -63,7 +63,6 @@ export const NavbarSoloStacking = () => {
         <HamburgerDropdown />
       </NavbarContent>
 
-      {/* TODO: Fix hamburger icon - Seems to be a NextUI bug */}
       <NavbarMenuToggle
         className={
           theme === "dark"
@@ -86,6 +85,7 @@ export const NavbarSoloStacking = () => {
         </NavbarMenuItem>
         <Divider className="mb-4" />
         <NavbarMenuItem className="mb-4">
+          {/* TODO: show and select network */}
           <div className="flex items-center justify-center">
             <Link
               href="/rewards"

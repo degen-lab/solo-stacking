@@ -46,8 +46,6 @@ const createBurnBlockHeightColumn = (): CustomColumnDef<RowData> => ({
   filterType: "number",
 });
 
-// TODO: create function to convert to equivalent in $
-
 //// Detailed columns
 
 const createCanonicalColumn = (): CustomColumnDef<RowData> => ({

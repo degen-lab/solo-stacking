@@ -30,6 +30,8 @@ export default function Home() {
     ],
     queryFn: () => {
       // TODO: Update with correct address according to network
+      // 1. xverse and leather
+      // 2. custom address
       if (isAuthenticated()) {
         return fetchRewardsData(
           // user?.btcAddress.p2wpkh.testnet || ""
