@@ -11,7 +11,7 @@ const inter = Roboto({ subsets: ["latin"], weight: "400" });
 
 export const metadata: Metadata = {
   title: "Stacks Solo Stacking",
-  description: "The solo stacking solution by Degen Lab",
+  description: "Solo stacking solution powered by Degen Lab",
 };
 
 export default function RootLayout({
