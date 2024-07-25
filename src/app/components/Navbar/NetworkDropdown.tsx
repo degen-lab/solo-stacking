@@ -43,6 +43,7 @@ export const SelectedNetwork: React.FC = () => {
       className={`w-36 rounded-xl text-center bg-transparent p-2 border-1 border-${
         theme === "dark" ? "white" : "black"
       }`}
+      style={{ cursor: "pointer" }}
     >
       <div className="text-sm">{networkInfo[network].title}</div>
     </div>
@@ -55,6 +56,7 @@ export const NetworkOption: React.FC<{ network: Network }> = ({ network }) => {
   return (
     <div
       className="text-center rounded-xl text-center bg-[#FA5512] p-1"
+      style={{ cursor: "pointer" }}
       onClick={() => updateNetwork(network)}
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {

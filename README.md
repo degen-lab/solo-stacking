@@ -1,5 +1,5 @@
 # The Solo Stacking Tool is live!
-https://stacking.tools/solo-stacking
+https://solo.stacking.tools
 
 # Test it on your local environment
 1. clone [repository](https://github.com/degen-lab/solo-stacking)
