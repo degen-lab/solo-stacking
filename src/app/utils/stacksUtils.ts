@@ -5,10 +5,9 @@ import { StacksMainnet, StacksTestnet } from "@stacks/network";
 import BigNumber from "bignumber.js";
 import type { PoxUserData } from "./queryFunctions";
 
-// TODO: Update with correct according to network
 export const POX_4_FIRST_BURN_HEIGHT = {
   "nakamoto-testnet": 245,
-  testnet: 0,
+  testnet: 6,
   mainnet: 840361,
 };
 

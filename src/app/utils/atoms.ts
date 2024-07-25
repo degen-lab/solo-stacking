@@ -44,3 +44,7 @@ export const stackExtendCyclesInput = atom<number>(0);
 
 export const openIncreasePage = atom<boolean>(false);
 export const openExtendPage = atom<boolean>(false);
+
+/// Reward atoms
+
+export const rewardsBtcAddressAtom = atom<string>("");

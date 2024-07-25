@@ -17,6 +17,7 @@ import { HamburgerDropdown } from "./Dropdown";
 import { ThemeSwitch } from "./ThemeSwitch";
 import { useTheme } from "next-themes";
 import { DetailedViewSwitch } from "./DetailedViewSwitch";
+import { NetworkDropdown } from "./NetworkDropdown";
 
 export interface NavbarItem {
   name: string;
@@ -59,6 +60,7 @@ export const NavbarSoloStacking = () => {
       </NavbarContent>
 
       <NavbarContent className="hidden md:flex" justify="end">
+        <NetworkDropdown></NetworkDropdown>
         <UserAvatar></UserAvatar>
         <HamburgerDropdown />
       </NavbarContent>
@@ -85,7 +87,6 @@ export const NavbarSoloStacking = () => {
         </NavbarMenuItem>
         <Divider className="mb-4" />
         <NavbarMenuItem className="mb-4">
-          {/* TODO: show and select network */}
           <div className="flex items-center justify-center">
             <Link
               href="/rewards"
@@ -108,6 +109,9 @@ export const NavbarSoloStacking = () => {
               Connect Wallet
             </Button>
           )}
+        </NavbarMenuItem>
+        <NavbarMenuItem className="flex text-center justify-center">
+          <NetworkDropdown></NetworkDropdown>
         </NavbarMenuItem>
       </NavbarMenu>
     </Navbar>

@@ -29,6 +29,7 @@ import { useContext } from "react";
 import type { PoxUserData } from "@/app/utils/queryFunctions";
 import { getCurRewCycleFromData } from "@/app/utils/api";
 import { PoxDetailsStructure } from "./PoxDetailsStructure";
+import { LeavePage } from "../Images/LeavePage";
 
 export const AlreadyStacking: React.FC<{
   data: PoxUserData;
@@ -136,7 +137,8 @@ export const AlreadyStacking: React.FC<{
               href={explorerTxUrl(mempoolIncreaseTxid, network)}
               target="new"
             >
-              Increase in progress...
+              <div>Increase in progress</div>
+              <LeavePage width={25} inverted={true}></LeavePage>
             </Link>
           </Button>
         ) : (
@@ -165,8 +167,9 @@ export const AlreadyStacking: React.FC<{
               href={explorerTxUrl(mempoolExtendTxid, network)}
               target="new"
             >
-              Extend in progress...
+              Extend in progress
             </Link>
+            <LeavePage width={25} inverted={true}></LeavePage>
           </Button>
         ) : (
           <Button

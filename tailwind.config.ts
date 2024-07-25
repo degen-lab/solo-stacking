@@ -68,16 +68,16 @@ const config: Config = {
             },
           },
         },
-        // primary: {
-        //   light: "#FA5512",
-        //   dark: "#FA5512",
-        //   DEFAULT: "#FA5512",
-        // },
-        // secondary: {
-        //   dark: "white",
-        //   light: "black",
-        //   DEFAULT: "black",
-        // },
+        primary: {
+          light: "#FA5512",
+          dark: "#FA5512",
+          DEFAULT: "#FA5512",
+        },
+        secondary: {
+          dark: "white",
+          light: "black",
+          DEFAULT: "black",
+        },
       },
     },
   },

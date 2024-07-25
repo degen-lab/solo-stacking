@@ -17,22 +17,37 @@ import { CustomColumnDef, RowData } from "@/app/types/tableTypes";
 import { TableComponent } from "../Table/TableComponent";
 import { RewardsDataType } from "@/app/utils/queryFunctions";
 import { useTheme } from "next-themes";
-import { Button } from "@nextui-org/react";
+import { Button, Input } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { AuthContext } from "@/app/contexts/AuthContext";
+import { useAtom } from "jotai";
+import { rewardsBtcAddressAtom } from "@/app/utils/atoms";
+import CustomErrorMessage from "../ErrorMessage/CustomErrorMessage";
+import { isValidBitcoinAddress } from "@/app/utils/validatorUtils";
+import { useNetwork } from "@/app/contexts/NetworkContext";
 
 export const Rewards: React.FC<{ rewardsData: RewardsDataType }> = ({
   rewardsData,
 }) => {
   const { theme } = useTheme();
-  const { isAuthenticated } = useContext(AuthContext);
+  const { isAuthenticated, btcAddress } = useContext(AuthContext);
+  const { network } = useNetwork();
+  const [rewardsBtcAddress, setRewardsBtcAddress] = useAtom<string>(
+    rewardsBtcAddressAtom
+  );
+  const [touchedRewBtcAddr, setTouchedRewBtcAddr] = useState(false);
 
   const router = useRouter();
+
   useEffect(() => {
     if (!isAuthenticated()) {
       router.push("/");
     }
   }, [isAuthenticated, router]);
+
+  useEffect(() => {
+    setRewardsBtcAddress(btcAddress || "");
+  }, [btcAddress]);
 
   if (!theme || (theme !== "dark" && theme !== "light"))
     throw new Error("Invalid Theme State");
@@ -131,6 +146,16 @@ export const Rewards: React.FC<{ rewardsData: RewardsDataType }> = ({
     );
   }, []);
 
+  const showErrorMessage = () => {
+    return (
+      touchedRewBtcAddr &&
+      !isValidBitcoinAddress(
+        rewardsBtcAddress,
+        network === "nakamoto-testnet" ? "testnet" : network
+      )
+    );
+  };
+
   const handleTabChange = useCallback((tab: string) => {
     setActiveTab(tab);
   }, []);
@@ -171,7 +196,26 @@ export const Rewards: React.FC<{ rewardsData: RewardsDataType }> = ({
   if (displayedRewards)
     return (
       <div className="flex flex-col h-screen p-4">
-        <div className="flex justify-between mb-4">
+        <div className="flex flex-col text-center items-center">
+          <h2 className="mb-4 mt-4">PoX Address</h2>
+          <Input
+            className="mb-6 w-[15rem]"
+            placeholder={btcAddress || "Enter BTC Address"}
+            onChange={(e) => {
+              if (e.target.value === "") {
+                setTouchedRewBtcAddr(false);
+                setRewardsBtcAddress(btcAddress || "");
+              } else {
+                setTouchedRewBtcAddr(true);
+                setRewardsBtcAddress(e.target.value);
+              }
+            }}
+          ></Input>
+          {showErrorMessage() && (
+            <CustomErrorMessage message="Please enter a valid BTC address." />
+          )}
+        </div>
+        <div className="flex justify-center mb-4 ">
           <Button
             onClick={() => setShowColumnToggle(!showColumnToggle)}
             color="primary"
@@ -208,7 +252,7 @@ export const Rewards: React.FC<{ rewardsData: RewardsDataType }> = ({
             </div>
           )}
         </div>
-        <div className="flex space-x-2">
+        <div className="flex justify-center space-x-2">
           <Button
             onClick={zoomIn}
             color="primary"
