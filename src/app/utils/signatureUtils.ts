@@ -20,7 +20,7 @@ export const getStackingSignature = (
   maxAmount: BigNumber,
   _network: any
 ) => {
-  // TODO: link based on network
+  // TODO: link based on network by parsing the network in body of post request
   const signature = axios
     .post("http://localhost:8080/get-signature", {
       maxAmount,

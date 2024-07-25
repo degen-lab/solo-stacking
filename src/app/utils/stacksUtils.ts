@@ -7,7 +7,7 @@ import type { PoxUserData } from "./queryFunctions";
 
 // TODO: Update with correct according to network
 export const POX_4_FIRST_BURN_HEIGHT = {
-  "nakamoto-testnet": 0,
+  "nakamoto-testnet": 245,
   testnet: 0,
   mainnet: 840361,
 };
