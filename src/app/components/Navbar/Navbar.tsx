@@ -85,19 +85,23 @@ export const NavbarSoloStacking = () => {
         <NavbarMenuItem className="mb-4">
           <DetailedViewSwitch />
         </NavbarMenuItem>
-        <Divider className="mb-4" />
-        <NavbarMenuItem className="mb-4">
-          <div className="flex items-center justify-center">
-            <Link
-              href="/rewards"
-              className={`text-center items-center text-[${
-                theme === "dark" ? "white" : "black"
-              }]`}
-            >
-              Rewards
-            </Link>
-          </div>
-        </NavbarMenuItem>
+        {isAuthenticated() && (
+          <>
+            <Divider className="mb-4" />
+            <NavbarMenuItem className="mb-4">
+              <div className="flex items-center justify-center">
+                <Link
+                  href="/rewards"
+                  className={`text-center items-center text-[${
+                    theme === "dark" ? "white" : "black"
+                  }]`}
+                >
+                  Rewards
+                </Link>
+              </div>
+            </NavbarMenuItem>
+          </>
+        )}
         <Divider className="mb-4" />
         <NavbarMenuItem className="mb-4">
           {isAuthenticated() ? (
