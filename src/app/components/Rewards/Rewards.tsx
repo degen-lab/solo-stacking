@@ -76,7 +76,7 @@ export const Rewards: React.FC<{ rewardsData: RewardsDataType }> = ({
   const [showColumnToggle, setShowColumnToggle] = useState(false);
 
   const currentColumns = useMemo(
-    () => getColumnsMap(theme)[activeTab],
+    () => getColumnsMap(network, theme)[activeTab],
     [activeTab]
   );
 
@@ -110,13 +110,13 @@ export const Rewards: React.FC<{ rewardsData: RewardsDataType }> = ({
     }
 
     const initialStates: Record<string, InitialState> = {};
-    Object.keys(getColumnsMap(theme)).forEach((tab) => {
+    Object.keys(getColumnsMap(network, theme)).forEach((tab) => {
       initialStates[tab] = {
         visibility: {},
         filters: [],
         sorting: [],
       };
-      getColumnsMap(theme)[tab].forEach((column) => {
+      getColumnsMap(network, theme)[tab].forEach((column) => {
         initialStates[tab].visibility[column.accessorKey as string] = true;
       });
     });
@@ -279,7 +279,7 @@ export const Rewards: React.FC<{ rewardsData: RewardsDataType }> = ({
           </Button>
         </div>
         <ul className="flex border-b mb-4 overflow-x-auto whitespace-nowrap">
-          {Object.keys(getColumnsMap(theme)).map((tab) => (
+          {Object.keys(getColumnsMap(network, theme)).map((tab) => (
             <li
               key={tab}
               onClick={() => handleTabChange(tab)}

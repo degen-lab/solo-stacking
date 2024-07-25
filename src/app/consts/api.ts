@@ -68,3 +68,11 @@ export const MEMPOOL_URL_ADDRESS = (
   network === "mainnet"
     ? `https://mempool.space/address/${address}`
     : `https://mempool.space/testnet/address/${address}`;
+
+export const GET_BITCOIN_BLOCK_HASH_EXPLORER_URL = (
+  network: "nakamoto-testnet" | "testnet" | "mainnet",
+  hash: string
+) =>
+  network === "mainnet"
+    ? `https://mempool.space/block/${hash}`
+    : `https://mempool.space/testnet/block/${hash}`;

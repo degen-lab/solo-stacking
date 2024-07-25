@@ -1,11 +1,13 @@
 import { CustomColumnDef, RowData } from "@/app/types/tableTypes";
 import { formatNumber, shortenAddress } from "@/app/utils/formatters";
 import {
-  GET_BITCOIN_ADDRESS_EXPLORER_URL,
-  GET_STACKS_BLOCK_HASH_EXPLORER_URL,
-} from "@/app/consts/urls";
+  GET_BITCOIN_BLOCK_HASH_EXPLORER_URL,
+  MEMPOOL_URL_ADDRESS,
+} from "@/app/consts/api";
+import { Network } from "@/app/contexts/AuthContext";
 
 const createBitcoinAddressColumn = (
+  network: Network,
   theme: "dark" | "light"
 ): CustomColumnDef<RowData> => ({
   header: "Address",
@@ -18,7 +20,7 @@ const createBitcoinAddressColumn = (
 
     return (
       <a
-        href={GET_BITCOIN_ADDRESS_EXPLORER_URL(poxAddress)}
+        href={MEMPOOL_URL_ADDRESS(network, poxAddress)}
         target="_blank"
         rel="noopener noreferrer"
         className={
@@ -55,6 +57,7 @@ const createCanonicalColumn = (): CustomColumnDef<RowData> => ({
 });
 
 const createBurnBlockHashColumn = (
+  network: Network,
   theme: "dark" | "light"
 ): CustomColumnDef<RowData> => ({
   header: "Burn Block Hash",
@@ -66,7 +69,7 @@ const createBurnBlockHashColumn = (
     const isDark = theme === "dark";
     return (
       <a
-        href={GET_STACKS_BLOCK_HASH_EXPLORER_URL(blockHash)}
+        href={GET_BITCOIN_BLOCK_HASH_EXPLORER_URL(network, blockHash)}
         target="_blank"
         rel="noopener noreferrer"
         className={
@@ -100,19 +103,20 @@ const createSlotIndexColumn = (): CustomColumnDef<RowData> => ({
 });
 
 export const getColumnsMap = (
+  network: Network,
   theme: "dark" | "light"
 ): Record<string, CustomColumnDef<RowData>[]> => ({
   Standard: [
-    createBitcoinAddressColumn(theme),
+    createBitcoinAddressColumn(network, theme),
     createBurnBlockHeightColumn(),
     createAmountSatsColumn(),
   ],
   Detailed: [
-    createBitcoinAddressColumn(theme),
+    createBitcoinAddressColumn(network, theme),
     createAmountSatsColumn(),
     createBurnBlockHeightColumn(),
     createCanonicalColumn(),
-    createBurnBlockHashColumn(theme),
+    createBurnBlockHashColumn(network, theme),
     createBurnAmountColumn(),
     createRewardIndexColumn(),
     createSlotIndexColumn(),

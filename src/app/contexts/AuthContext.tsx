@@ -47,7 +47,6 @@ const AuthContextProvider: React.FC<{
   children: ReactNode;
 }> = ({ children }) => {
   const appConfig = new AppConfig(["store_write", "publish_data"]);
-  // const network = (process.env.NEXT_PUBLIC_NETWORK || "mainnet") as Network;
   const { network } = useNetwork();
   const userSession = new UserSession({ appConfig });
 
