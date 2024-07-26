@@ -49,7 +49,7 @@ export const Rewards: React.FC<{ rewardsData: RewardsDataType }> = ({
     setRewardsBtcAddress(btcAddress || "");
   }, [btcAddress]);
 
-  if (!theme || (theme !== "dark" && theme !== "light"))
+  if (!theme || (theme !== "dark" && theme !== "light" && theme !== "system"))
     throw new Error("Invalid Theme State");
   console.log("data:::", rewardsData);
   const [displayedRewards, setDisplayedRewards] = useState<RowData[]>([]);
