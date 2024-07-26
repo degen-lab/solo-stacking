@@ -8,7 +8,7 @@ import { Network } from "@/app/contexts/AuthContext";
 
 const createBitcoinAddressColumn = (
   network: Network,
-  theme: "dark" | "light"
+  theme: "dark" | "light" | "system"
 ): CustomColumnDef<RowData> => ({
   header: "Address",
   accessorKey: "address",
@@ -58,7 +58,7 @@ const createCanonicalColumn = (): CustomColumnDef<RowData> => ({
 
 const createBurnBlockHashColumn = (
   network: Network,
-  theme: "dark" | "light"
+  theme: "dark" | "light" | "system"
 ): CustomColumnDef<RowData> => ({
   header: "Burn Block Hash",
   accessorKey: "burn_block_hash",
@@ -104,7 +104,7 @@ const createSlotIndexColumn = (): CustomColumnDef<RowData> => ({
 
 export const getColumnsMap = (
   network: Network,
-  theme: "dark" | "light"
+  theme: "dark" | "light" | "system"
 ): Record<string, CustomColumnDef<RowData>[]> => ({
   Standard: [
     createBitcoinAddressColumn(network, theme),
