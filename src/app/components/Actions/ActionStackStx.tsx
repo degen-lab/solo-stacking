@@ -25,7 +25,7 @@ import { useDetailedView } from "@/app/contexts/DetailedViewContext";
 export const ActionStackStx: React.FC<{
   data: PoxUserData;
 }> = ({ data }) => {
-  const { theme } = useTheme();
+  const { resolvedTheme: theme } = useTheme();
   const { btcAddress, network, btcNetwork } = useContext(AuthContext);
   const { detailedView } = useDetailedView();
   const [, setUserState] = useAtom(userStateAtom);

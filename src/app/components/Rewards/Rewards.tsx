@@ -29,7 +29,7 @@ import { useNetwork } from "@/app/contexts/NetworkContext";
 export const Rewards: React.FC<{ rewardsData: RewardsDataType }> = ({
   rewardsData,
 }) => {
-  const { theme } = useTheme();
+  const { resolvedTheme: theme } = useTheme();
   const { isAuthenticated, btcAddress } = useContext(AuthContext);
   const { network } = useNetwork();
   const [rewardsBtcAddress, setRewardsBtcAddress] = useAtom<string>(

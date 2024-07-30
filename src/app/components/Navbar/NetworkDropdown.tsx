@@ -36,13 +36,15 @@ export const NetworkDropdown = () => {
 
 export const SelectedNetwork: React.FC = () => {
   const { network } = useNetwork();
-  const { theme } = useTheme();
+  const { resolvedTheme: theme } = useTheme();
 
   return (
     <div
-      className={`w-36 rounded-xl text-center bg-transparent p-2 border-1 border-${
-        theme === "dark" ? "white" : "black"
-      }`}
+      // className={`w-36 rounded-xl text-center bg-transparent p-2 border-1 border-${
+      //   theme === "dark" ? "white" : "black"
+      // }`}
+      // style={{ cursor: "pointer" }}
+      className="w-36 rounded-xl text-center bg-transparent p-2 border-1 border-black dark:border-white"
       style={{ cursor: "pointer" }}
     >
       <div className="text-sm">{networkInfo[network].title}</div>

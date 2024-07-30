@@ -34,7 +34,7 @@ export const TableComponent: React.FC<TableComponentProps> = ({
     getSortedRowModel: getSortedRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
   });
-  const { theme } = useTheme();
+  const { resolvedTheme: theme } = useTheme();
   const isDark = theme === "dark";
 
   return (

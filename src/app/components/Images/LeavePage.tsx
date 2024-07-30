@@ -4,7 +4,7 @@ export const LeavePage: React.FC<{ width: number; inverted: boolean }> = ({
   width,
   inverted,
 }) => {
-  const { theme } = useTheme();
+  const { resolvedTheme: theme } = useTheme();
   return (
     <svg
       width={`${width}px`}
