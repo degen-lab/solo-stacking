@@ -36,7 +36,6 @@ export const NetworkDropdown = () => {
 
 export const SelectedNetwork: React.FC = () => {
   const { network } = useNetwork();
-  const { resolvedTheme: theme } = useTheme();
 
   return (
     <div
