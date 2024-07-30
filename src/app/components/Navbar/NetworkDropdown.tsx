@@ -40,10 +40,6 @@ export const SelectedNetwork: React.FC = () => {
 
   return (
     <div
-      // className={`w-36 rounded-xl text-center bg-transparent p-2 border-1 border-${
-      //   theme === "dark" ? "white" : "black"
-      // }`}
-      // style={{ cursor: "pointer" }}
       className="w-36 rounded-xl text-center bg-transparent p-2 border-1 border-black dark:border-white"
       style={{ cursor: "pointer" }}
     >
