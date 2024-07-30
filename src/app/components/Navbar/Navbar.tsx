@@ -38,7 +38,7 @@ export const NavbarSoloStacking = () => {
 
   return (
     <Navbar className="p-0 m-0" onMenuOpenChange={setIsMenuOpen}>
-      <NavbarContent>
+      <NavbarContent justify="start">
         <Link color="foreground" href="/">
           <Image
             src="/stacks-logo.png"
@@ -65,15 +65,19 @@ export const NavbarSoloStacking = () => {
         <HamburgerDropdown />
       </NavbarContent>
 
-      <NavbarMenuToggle
+      <NavbarContent 
+        justify="end"
         className={
-          theme === "dark"
-            ? "fill-white md:hidden p-0"
-            : "fill-black md:hidden p-0"
-        }
-        icon={isMenuOpen ? "x" : "≡"}
-        aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-      ></NavbarMenuToggle>
+        theme === "dark"
+          ? "fill-white md:hidden p-0"
+          : "fill-black md:hidden p-0"
+      }>
+        <NavbarMenuToggle
+
+          icon={isMenuOpen ? "x" : "≡"}
+          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+        ></NavbarMenuToggle>
+      </NavbarContent>
 
       <NavbarMenu className="text-center">
         <NavbarMenuItem className="mb-4">
