@@ -48,7 +48,7 @@ export const UserAvatar = () => {
 
 export const UserAvatarSTXAddress = () => {
   const { isAuthenticated, user, network } = useContext(AuthContext);
-  const { theme } = useTheme();
+  const { resolvedTheme: theme } = useTheme();
   return (
     <div>
       {isAuthenticated() && user ? (

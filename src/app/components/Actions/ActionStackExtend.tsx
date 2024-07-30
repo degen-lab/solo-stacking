@@ -25,7 +25,7 @@ import { getCurRewCycleFromData } from "@/app/utils/api";
 export const ActionStackExtend: React.FC<{ data: PoxUserData }> = ({
   data,
 }) => {
-  const { theme } = useTheme();
+  const { resolvedTheme: theme } = useTheme();
   const { detailedView } = useDetailedView();
   const { network } = useContext(AuthContext);
 

@@ -33,7 +33,7 @@ export interface NavbarItem {
 
 export const NavbarSoloStacking = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { theme } = useTheme();
+  const { resolvedTheme: theme } = useTheme();
   const { isAuthenticated, login, logout } = useContext(AuthContext);
 
   return (
@@ -65,15 +65,15 @@ export const NavbarSoloStacking = () => {
         <HamburgerDropdown />
       </NavbarContent>
 
-      <NavbarContent 
+      <NavbarContent
         justify="end"
         className={
-        theme === "dark"
-          ? "fill-white md:hidden p-0"
-          : "fill-black md:hidden p-0"
-      }>
+          theme === "dark"
+            ? "fill-white md:hidden p-0"
+            : "fill-black md:hidden p-0"
+        }
+      >
         <NavbarMenuToggle
-
           icon={isMenuOpen ? "x" : "≡"}
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
         ></NavbarMenuToggle>

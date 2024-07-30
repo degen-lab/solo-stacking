@@ -24,7 +24,7 @@ import { useDetailedView } from "@/app/contexts/DetailedViewContext";
 export const ActionStackIncrease: React.FC<{ data: PoxUserData }> = ({
   data,
 }) => {
-  const { theme } = useTheme();
+  const { resolvedTheme: theme } = useTheme();
   const { detailedView } = useDetailedView();
   const { network } = useContext(AuthContext);
 

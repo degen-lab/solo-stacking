@@ -15,7 +15,7 @@ import { DetailedViewSwitch } from "./DetailedViewSwitch";
 
 export const HamburgerDropdown = () => {
   const { isAuthenticated, logout } = useContext(AuthContext);
-  const { theme } = useTheme();
+  const { resolvedTheme: theme } = useTheme();
   const [render, setRender] = useState(false);
 
   useEffect(() => {

@@ -34,7 +34,7 @@ import { LeavePage } from "../Images/LeavePage";
 export const AlreadyStacking: React.FC<{
   data: PoxUserData;
 }> = ({ data }) => {
-  const { theme } = useTheme();
+  const { resolvedTheme: theme } = useTheme();
   const { network } = useContext(AuthContext);
   const [increaseUserState] = useAtom(increaseUserStateAtom);
   const [extendUserState] = useAtom(extendUserStateAtom);
