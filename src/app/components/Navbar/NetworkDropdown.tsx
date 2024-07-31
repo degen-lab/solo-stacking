@@ -6,7 +6,6 @@ import {
   DropdownMenu,
   DropdownTrigger,
 } from "@nextui-org/react";
-import { useTheme } from "next-themes";
 import { useNetwork } from "@/app/contexts/NetworkContext";
 import { networkInfo } from "@/app/consts/network";
 
