@@ -59,7 +59,7 @@ export const NavbarSoloStacking = () => {
         </NavbarBrand>
       </NavbarContent>
 
-      <NavbarContent className="hidden md:flex" justify="end">
+      <NavbarContent className="hidden lg:flex" justify="end">
         <NetworkDropdown></NetworkDropdown>
         <UserAvatar></UserAvatar>
         <HamburgerDropdown />
@@ -69,8 +69,8 @@ export const NavbarSoloStacking = () => {
         justify="end"
         className={
           theme === "dark"
-            ? "fill-white md:hidden p-0"
-            : "fill-black md:hidden p-0"
+            ? "fill-white lg:hidden p-0"
+            : "fill-black lg:hidden p-0"
         }
       >
         <NavbarMenuToggle
