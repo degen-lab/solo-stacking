@@ -7,7 +7,7 @@ import { ThemeProvider } from "next-themes";
 import { ReactQueryProvider } from "./contexts/ReactQueryContext";
 import { DetailedViewProvider } from "./contexts/DetailedViewContext";
 import { NetworkProvider } from "./contexts/NetworkContext";
-import Footer from "./components/Footer/Footer";
+
 const inter = Roboto({ subsets: ["latin"], weight: "400" });
 
 export const metadata: Metadata = {
@@ -32,11 +32,7 @@ export default function RootLayout({
             <NetworkProvider>
               <ReactQueryProvider>
                 <AuthContextProvider>
-                  <div className="flex flex-col lg:min-h-screen">
-                    <NavbarSoloStacking />
-                    <main className="flex-grow">{children}</main>
-                    <Footer />
-                  </div>
+                  <main className="flex-grow">{children}</main>
                 </AuthContextProvider>
               </ReactQueryProvider>
             </NetworkProvider>
