@@ -99,7 +99,7 @@ export const ActionStackStx: React.FC<{
   };
 
   return (
-    <div className="text-left p-8">
+    <div className="p-8">
       {detailedView && (
         <div className="flex justify-center">
           <p className="text-md mb-4 text-center text-[#909090] w-[75%]">
