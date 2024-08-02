@@ -17,6 +17,7 @@ import { useAtom } from "jotai";
 import type { PoxUserData } from "@/app/utils/queryFunctions";
 import BigNumber from "bignumber.js";
 import { Spinner } from "@nextui-org/react";
+import Footer from "../Footer/Footer";
 
 export const Landing: React.FC = () => {
   const { user, network, stxAddress: userAddress } = useContext(AuthContext);

@@ -96,7 +96,7 @@ export const ActionStackExtend: React.FC<{ data: PoxUserData }> = ({
           ? `You are stacking for this cycle and the next
          ${lockPeriod - 1}`
           : !stackingThisCycle && lockPeriod > 1
-          ? `You are stacking for the next ${lockPeriod} cycles. This one won't gereate rewards.`
+          ? `You are stacking for the next ${lockPeriod} cycles. This one won't generate rewards.`
           : `Your stack will end after this cycle. Extend now to keep it active.`}
       </h1>
       <p className="text-lg font-bold mb-4 text-center">Extend count</p>
