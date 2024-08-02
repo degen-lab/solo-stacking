@@ -17,6 +17,8 @@ import { useAtom } from "jotai";
 import type { PoxUserData } from "@/app/utils/queryFunctions";
 import BigNumber from "bignumber.js";
 import { Spinner } from "@nextui-org/react";
+import Footer from "../Footer/Footer";
+import { NavbarSoloStacking } from "../Navbar/Navbar";
 
 export const Landing: React.FC = () => {
   const { user, network, stxAddress: userAddress } = useContext(AuthContext);
@@ -34,14 +36,18 @@ export const Landing: React.FC = () => {
   }, [data]);
 
   return (
-    <div className="flex flex-row justify-center items-center lg:h-screen w-full">
-      {isLoading && (
-        <div className="flex h-screen justify-center">
-          <Spinner label="Loading" color="primary" labelColor="foreground" />
-        </div>
-      )}
-      {error && <p>Error retrieving user data</p>}
-      {data && <Scenario data={data} />}
+    <div className="flex flex-col min-h-screen">
+      <NavbarSoloStacking />
+      <div className="flex flex-col justify-center items-center flex-grow p-4">
+        {isLoading && (
+          <div className="flex justify-center">
+            <Spinner label="Loading" color="primary" labelColor="foreground" />
+          </div>
+        )}
+        {error && <p>Error retrieving user data</p>}
+        {data && <Scenario data={data} />}
+      </div>
+      <Footer />
     </div>
   );
 };
@@ -80,6 +86,7 @@ export const Scenario: React.FC<{ data: PoxUserData }> = ({ data }) => {
       setExtendUserState("ExtendMempool");
     }
   };
+
   const getUserState = () => {
     const checkStackingTransaction = checkIsStackingInProgress(
       mempoolTransactions,
@@ -104,14 +111,14 @@ export const Scenario: React.FC<{ data: PoxUserData }> = ({ data }) => {
   }, [user, data, data.mempoolExtend, data.mempoolIncrease]);
 
   return (
-    <div className="flex flex-col lg:flex-row justify-center items-center lg:h-screen w-full">
+    <div className="flex flex-col lg:flex-row justify-center items-center w-full">
       {isAuthenticated() &&
         (increasePageOpen || extendPageOpen || userState === "StackStx") && (
           <div className="text-center min-w-[50%]">
             <ActionContainer data={data} />
           </div>
         )}
-      <div className="flex w-full lg:h-screen justify-center items-center">
+      <div className="flex w-full justify-center items-center">
         <DisplayedPoxDetails data={data} />
       </div>
     </div>
