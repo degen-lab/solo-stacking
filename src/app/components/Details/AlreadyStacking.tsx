@@ -167,9 +167,9 @@ export const AlreadyStacking: React.FC<{
               href={explorerTxUrl(mempoolExtendTxid, network)}
               target="new"
             >
-              Extend in progress
+              <div>Extend in progress</div>
+              <LeavePage width={25} inverted={true}></LeavePage>
             </Link>
-            <LeavePage width={25} inverted={true}></LeavePage>
           </Button>
         ) : (
           <Button

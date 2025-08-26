@@ -77,8 +77,8 @@ export const UserAvatarSTXAddress = () => {
                 ]
               )}
             </p>
+            <LeavePage width={25} inverted={false}></LeavePage>
           </Link>
-          <LeavePage width={25} inverted={false}></LeavePage>
         </div>
       ) : (
         <div />
