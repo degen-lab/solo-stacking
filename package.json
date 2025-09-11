@@ -16,7 +16,7 @@
     "@nextui-org/react": "^2.4.2",
     "@nextui-org/system": "^2.2.2",
     "@nextui-org/theme": "^2.2.6",
-    "@stacks/connect": "^7.7.1",
+    "@stacks/connect": "^8.2.0",
     "@stacks/network": "^6.13.0",
     "@stacks/stacking": "^6.16.1",
     "@stacks/transactions": "^6.16.1",
