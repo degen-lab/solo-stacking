@@ -14,7 +14,7 @@ import { ThemeSwitch } from "./ThemeSwitch";
 import { DetailedViewSwitch } from "./DetailedViewSwitch";
 
 export const HamburgerDropdown = () => {
-  const { isAuthenticated, logout } = useContext(AuthContext);
+  const { isAuthenticated, logout, isLoggingOut } = useContext(AuthContext);
   const { resolvedTheme: theme } = useTheme();
   const [render, setRender] = useState(false);
 
@@ -60,8 +60,9 @@ export const HamburgerDropdown = () => {
             key="logout"
             className="text-center"
             onClick={() => logout()}
+            isDisabled={isLoggingOut}
           >
-            Logout
+            {isLoggingOut ? "Disconnecting..." : "Logout"}
           </DropdownItem>
         </DropdownMenu>
       </Dropdown>

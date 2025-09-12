@@ -24,7 +24,7 @@ export const LeavePage: React.FC<{ width: number; inverted: boolean }> = ({
             ? "white"
             : "black"
         }
-        stroke-width="1.2"
+        strokeWidth="1.2"
       />
       <path
         d="M20 10L22.5 12.5L20 15"
@@ -37,7 +37,7 @@ export const LeavePage: React.FC<{ width: number; inverted: boolean }> = ({
             ? "white"
             : "black"
         }
-        stroke-width="1.2"
+        strokeWidth="1.2"
       />
     </svg>
   );

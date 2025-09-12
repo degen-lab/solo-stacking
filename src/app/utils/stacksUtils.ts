@@ -1,8 +1,8 @@
 import { poxAddressToBtcAddress, poxAddressToTuple } from "@stacks/stacking";
 import { bufferCV, optionalCVOf, uintCV } from "@stacks/transactions";
 import { Network } from "../contexts/AuthContext";
-import { StacksMainnet, StacksTestnet } from "@stacks/network";
 import BigNumber from "bignumber.js";
+import { STACKS_MAINNET, STACKS_TESTNET } from "@stacks/network";
 import type { PoxUserData } from "./queryFunctions";
 
 export const POX_4_FIRST_BURN_HEIGHT = {
@@ -94,10 +94,10 @@ export const parseStackIncreaseArgs = (
 
 export const stacksNetworkFromStringNetwork = (network: Network) =>
   network === "nakamoto-testnet"
-    ? new StacksTestnet({ url: "https://api.nakamoto.testnet.hiro.so" })
+    ? STACKS_TESTNET
     : network === "testnet"
-    ? new StacksTestnet()
-    : new StacksMainnet();
+    ? STACKS_TESTNET
+    : STACKS_MAINNET;
 
 export const poxContractFromData = (data: PoxUserData) =>
   data.poxInfo.contract_id;

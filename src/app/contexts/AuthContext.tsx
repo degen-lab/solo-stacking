@@ -5,12 +5,13 @@ import {
   getLocalStorage,
   isConnected,
 } from "@stacks/connect";
-import { createContext, ReactNode, useContext } from "react";
+import { createContext, ReactNode, useContext, useState } from "react";
 import {
   detectNetworkFromAddress,
   getUserAddress,
   getUserBtcAddress,
 } from "../utils";
+import { isClientSide } from "../utils/ssr";
 
 export type Network = "mainnet" | "nakamoto-testnet" | "testnet";
 
@@ -27,6 +28,7 @@ interface AuthContextInterface {
   btcAddress: string | null;
   walletProvider: string | undefined;
   isAuthenticated: () => boolean;
+  isLoggingOut: boolean;
   login: () => void;
   logout: () => void;
 }
@@ -46,16 +48,20 @@ export const useAuth = () => {
 const AuthContextProvider: React.FC<{
   children: ReactNode;
 }> = ({ children }) => {
-  const walletProvider = isConnected()
-    ? (getLocalStorage() as any)?.selectedProvider || "unknown"
-    : undefined;
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
-  const user = isConnected()
-    ? {
-        stxAddress: getUserAddress(),
-        btcAddress: getUserBtcAddress(),
-      }
-    : null;
+  const walletProvider =
+    isClientSide() && isConnected()
+      ? (getLocalStorage() as any)?.selectedProvider || "unknown"
+      : undefined;
+
+  const user =
+    isClientSide() && isConnected()
+      ? {
+          stxAddress: getUserAddress(),
+          btcAddress: getUserBtcAddress(),
+        }
+      : null;
 
   const network = detectNetworkFromAddress(user?.stxAddress || null);
 
@@ -70,17 +76,27 @@ const AuthContextProvider: React.FC<{
           process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID,
         approvedProviderIds: [
           "LeatherProvider",
+          "XverseProviders.BitcoinProvider",
           "FordefiProvider.UtxoProvider",
-          "WalletConnectProvider",
         ],
       });
+      if (isClientSide()) {
+        window.location.reload();
+      }
     } catch (error) {
       console.error("Error connecting to wallet:", error);
     }
   };
 
   const logout = async () => {
-    await disconnect();
+    setIsLoggingOut(true);
+    try {
+      await disconnect();
+    } catch (error) {
+      console.error("Error disconnecting:", error);
+    } finally {
+      setIsLoggingOut(false);
+    }
   };
 
   return (
@@ -92,7 +108,8 @@ const AuthContextProvider: React.FC<{
         network,
         btcNetwork,
         walletProvider,
-        isAuthenticated: () => isConnected(),
+        isAuthenticated: () => typeof window !== "undefined" && isConnected(),
+        isLoggingOut,
         login,
         logout,
       }}
@@ -101,4 +118,5 @@ const AuthContextProvider: React.FC<{
     </AuthContext.Provider>
   );
 };
+
 export default AuthContextProvider;
