@@ -25,7 +25,7 @@ export const HamburgerDropdown = () => {
     return (
       <Dropdown
         closeOnSelect={false}
-        className="rounded-lg border-2 border-[#f5f5f5]"
+        className="rounded-lg border border-[#f5f5f5]"
       >
         <DropdownTrigger>
           <Image

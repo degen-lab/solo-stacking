@@ -5,7 +5,6 @@ import "./globals.css";
 import { ThemeProvider } from "next-themes";
 import { ReactQueryProvider } from "./contexts/ReactQueryContext";
 import { DetailedViewProvider } from "./contexts/DetailedViewContext";
-import { NetworkProvider } from "./contexts/NetworkContext";
 
 const inter = Roboto({ subsets: ["latin"], weight: "400" });
 
@@ -28,13 +27,11 @@ export default function RootLayout({
           enableSystem={true}
         >
           <DetailedViewProvider>
-            <NetworkProvider>
-              <ReactQueryProvider>
-                <AuthContextProvider>
-                  <main className="flex-grow">{children}</main>
-                </AuthContextProvider>
-              </ReactQueryProvider>
-            </NetworkProvider>
+            <ReactQueryProvider>
+              <AuthContextProvider>
+                <main className="flex-grow">{children}</main>
+              </AuthContextProvider>
+            </ReactQueryProvider>
           </DetailedViewProvider>
         </ThemeProvider>
       </body>

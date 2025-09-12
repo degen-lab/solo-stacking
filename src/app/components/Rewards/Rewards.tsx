@@ -24,14 +24,12 @@ import { useAtom } from "jotai";
 import { rewardsBtcAddressAtom } from "@/app/utils/atoms";
 import CustomErrorMessage from "../ErrorMessage/CustomErrorMessage";
 import { isValidBitcoinAddress } from "@/app/utils/validatorUtils";
-import { useNetwork } from "@/app/contexts/NetworkContext";
 
 export const Rewards: React.FC<{ rewardsData: RewardsDataType }> = ({
   rewardsData,
 }) => {
   const { resolvedTheme: theme } = useTheme();
-  const { isAuthenticated, btcAddress } = useContext(AuthContext);
-  const { network } = useNetwork();
+  const { isAuthenticated, btcAddress, network } = useContext(AuthContext);
   const [rewardsBtcAddress, setRewardsBtcAddress] = useAtom<string>(
     rewardsBtcAddressAtom
   );

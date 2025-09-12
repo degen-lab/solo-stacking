@@ -10,11 +10,9 @@ import { useRouter } from "next/navigation";
 import { useAtom } from "jotai";
 import { rewardsBtcAddressAtom } from "../utils/atoms";
 import { isValidBitcoinAddress } from "../utils/validatorUtils";
-import { useNetwork } from "../contexts/NetworkContext";
 
 export default function Home() {
-  const { user, isAuthenticated } = useContext(AuthContext);
-  const { network } = useNetwork();
+  const { user, isAuthenticated, network } = useContext(AuthContext);
   const [rewardsBtcAddress] = useAtom<string>(rewardsBtcAddressAtom);
 
   const router = useRouter();

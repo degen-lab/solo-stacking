@@ -50,3 +50,8 @@ export const getUserBtcAddress = () => {
   if (!storage?.addresses?.btc?.[0]?.address) return null;
   return storage.addresses.btc[0].address as string;
 };
+
+export const detectNetworkFromAddress = (address: string | null): Network => {
+  if (!address) return "mainnet";
+  return address.startsWith("ST") ? "testnet" : "mainnet";
+};
