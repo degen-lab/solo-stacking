@@ -77,7 +77,8 @@ const AuthContextProvider: React.FC<{
         approvedProviderIds: [
           "LeatherProvider",
           "XverseProviders.BitcoinProvider",
-          "FordefiProvider.UtxoProvider",
+          "FordefiProviders.UtxoProvider",
+          "WalletConnectProvider",
         ],
       });
       if (isClientSide()) {
