@@ -22,7 +22,7 @@ export const getStackingSignature = (
   network: Network
 ) => {
   const signature = axios
-    .post("http://localhost:8080/get-signature", {
+    .post("http://localhost:9001/get-signature", {
       maxAmount,
       period,
       poxAddress,
