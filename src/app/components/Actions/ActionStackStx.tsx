@@ -65,11 +65,13 @@ export const ActionStackStx: React.FC<{
       touchedPoxAddr && !isValidBitcoinAddress(stackStxPoxAddr, btcNetwork)
     );
   };
-
-  const isButtonDisabled = () =>
-    !isValidStackStxAmount(stackStxAmountSTX, data).valid ||
-    !isValidNumCyclesAndMessage(stackStxNumCycles, data).valid ||
-    !isValidBitcoinAddress(stackStxPoxAddr, btcNetwork);
+  const isButtonDisabled = () => {
+    return false;
+  };
+  // const isButtonDisabled = () =>
+  //   !isValidStackStxAmount(stackStxAmountSTX, data).valid ||
+  //   !isValidNumCyclesAndMessage(stackStxNumCycles, data).valid ||
+  //   !isValidBitcoinAddress(stackStxPoxAddr, btcNetwork);
 
   const curRewCycle = getCurRewCycleFromData(data);
   if (curRewCycle === null) throw new Error("No current reward cycle found");

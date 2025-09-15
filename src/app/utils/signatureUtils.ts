@@ -22,7 +22,7 @@ export const getStackingSignature = (
   network: Network
 ) => {
   const signature = axios
-    .post("https://signature-be.degenlab.io/get-signature", {
+    .post("http://localhost:8080/get-signature", {
       maxAmount,
       period,
       poxAddress,
