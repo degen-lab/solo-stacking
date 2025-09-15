@@ -44,7 +44,9 @@ export const API_STACKER_INFO_URL = (
 ) =>
   `https://api.${parseNetwork(
     network
-  )}.hiro.so/v2/contracts/call-read/ST000000000000000000002AMW42H/pox-4/get-stacker-info`;
+  )}.hiro.so/v2/contracts/call-read/${POX_4_CONTRACT_ADDRESS(
+    network
+  )}/pox-4/get-stacker-info`;
 
 export const POX_4_CONTRACT_ADDRESS = (network: string) =>
   network === "mainnet"
