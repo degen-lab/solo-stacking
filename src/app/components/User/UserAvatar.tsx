@@ -47,7 +47,7 @@ export const UserAvatar = () => {
 };
 
 export const UserAvatarSTXAddress = () => {
-  const { isAuthenticated, user, network } = useContext(AuthContext);
+  const { isAuthenticated, user } = useContext(AuthContext);
   const { resolvedTheme: theme } = useTheme();
   return (
     <div>
@@ -61,23 +61,12 @@ export const UserAvatarSTXAddress = () => {
           style={{ cursor: "pointer" }}
         >
           <Link
-            href={explorerAddressUrl(
-              user?.stxAddress[
-                network === "nakamoto-testnet" ? "testnet" : network
-              ],
-              network
-            )}
+            href={explorerAddressUrl(user?.stxAddress || "", "testnet")}
             className="flex items-center justify-center mr-1"
             target="new"
           >
-            <p>
-              {getShorterAddress(
-                user?.stxAddress[
-                  network === "nakamoto-testnet" ? "testnet" : network
-                ]
-              )}
-            </p>
-            <LeavePage width={25} inverted={false}></LeavePage>
+            <p>{getShorterAddress(user?.stxAddress || "")}</p>
+            <LeavePage width={25} inverted={false} />
           </Link>
         </div>
       ) : (

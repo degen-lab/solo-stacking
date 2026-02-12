@@ -1,4 +1,3 @@
-import { StacksMainnet, StacksTestnet } from "@stacks/network";
 import { parseNetwork } from "../utils/api";
 
 export const API_BALANCES_URL = (
@@ -45,21 +44,15 @@ export const API_STACKER_INFO_URL = (
 ) =>
   `https://api.${parseNetwork(
     network
-  )}.hiro.so/v2/contracts/call-read/ST000000000000000000002AMW42H/pox-4/get-stacker-info`;
+  )}.hiro.so/v2/contracts/call-read/${POX_4_CONTRACT_ADDRESS(
+    network
+  )}/pox-4/get-stacker-info`;
 
 export const POX_4_CONTRACT_ADDRESS = (network: string) =>
   network === "mainnet"
     ? "SP000000000000000000002Q6VF78"
     : "ST000000000000000000002AMW42H";
 export const POX_4_CONTRACT_NAME = "pox-4";
-
-export const STACKS_NETWORK = (network: string) => {
-  return network === "mainnet"
-    ? new StacksMainnet()
-    : network === "testnet"
-    ? new StacksTestnet()
-    : new StacksTestnet({ url: "https://api.nakamoto.testnet.hiro.so" });
-};
 
 export const MEMPOOL_URL_ADDRESS = (
   network: "nakamoto-testnet" | "testnet" | "mainnet",

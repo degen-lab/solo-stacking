@@ -1,40 +1,34 @@
 "use client";
-import { AppConfig, showConnect, UserSession } from "@stacks/connect";
-import { createContext, ReactNode } from "react";
-import { useNetwork } from "./NetworkContext";
+import {
+  connect,
+  disconnect,
+  getLocalStorage,
+  isConnected,
+} from "@stacks/connect";
+import { createContext, ReactNode, useContext, useState } from "react";
+import {
+  detectNetworkFromAddress,
+  getUserAddress,
+  getUserBtcAddress,
+} from "../utils";
+import { isClientSide } from "../utils/ssr";
 
 export type Network = "mainnet" | "nakamoto-testnet" | "testnet";
 
 interface UserInterface {
-  stxAddress: {
-    mainnet: string;
-    testnet: string;
-  };
-  btcAddress: {
-    p2tr: {
-      mainnet: string;
-      testnet: string;
-      regtest: string;
-      simnet: string;
-    };
-    p2wpkh: {
-      mainnet: string;
-      testnet: string;
-      regtest: string;
-      simnet: string;
-    };
-  };
+  stxAddress: string | null;
+  btcAddress: string | null;
 }
 
 interface AuthContextInterface {
   user?: UserInterface | null;
   network: Network;
   btcNetwork: "mainnet" | "testnet";
-  userSession: UserSession;
   stxAddress: string | null;
   btcAddress: string | null;
-  walletProvider: ("leather" | "xverse") | undefined;
+  walletProvider: string | undefined;
   isAuthenticated: () => boolean;
+  isLoggingOut: boolean;
   login: () => void;
   logout: () => void;
 }
@@ -43,73 +37,80 @@ export const AuthContext = createContext<AuthContextInterface>(
   {} as AuthContextInterface
 );
 
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
+};
+
 const AuthContextProvider: React.FC<{
   children: ReactNode;
 }> = ({ children }) => {
-  const appConfig = new AppConfig(["store_write", "publish_data"]);
-  const { network } = useNetwork();
-  const userSession = new UserSession({ appConfig });
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
-  const isAuthenticated = () =>
-    userSession ? userSession.isUserSignedIn() : false;
+  const walletProvider =
+    isClientSide() && isConnected()
+      ? (getLocalStorage() as any)?.selectedProvider || "unknown"
+      : undefined;
 
-  const walletProvider: "leather" | "xverse" = isAuthenticated()
-    ? userSession.loadUserData().profile.walletProvider || "xverse"
-    : undefined;
+  const user =
+    isClientSide() && isConnected()
+      ? {
+          stxAddress: getUserAddress(),
+          btcAddress: getUserBtcAddress(),
+        }
+      : null;
 
-  const user = isAuthenticated()
-    ? {
-        stxAddress: userSession.loadUserData().profile.stxAddress,
-        btcAddress: userSession.loadUserData().profile.btcAddress,
-      }
-    : null;
-
-  const stxAddress = user
-    ? user.stxAddress[network === "nakamoto-testnet" ? "testnet" : network]
-    : null;
-
-  // TODO: Asigna?
-  const btcAddress = user
-    ? walletProvider === "leather"
-      ? user.btcAddress.p2wpkh[
-          network === "nakamoto-testnet" ? "testnet" : network
-        ]
-      : user.btcAddress
-    : null;
+  const network = detectNetworkFromAddress(user?.stxAddress || null);
 
   // FIXME: Currently all Stacks networks work with the mainnet Bitcoin network.
   // However, Leather wallet won't let you pick the correct Bitcoin network.
   const btcNetwork = network === "mainnet" ? "mainnet" : "testnet";
 
-  const login = () => {
-    showConnect({
-      appDetails: {
-        name: "Degenlab Stacks Signer",
-        icon: window.location.origin + "/stacks-logo",
-      },
-      redirectTo: "/",
-      onFinish: () => {
+  const login = async () => {
+    try {
+      await connect({
+        walletConnectProjectId:
+          process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID,
+        approvedProviderIds: [
+          "LeatherProvider",
+          "XverseProviders.BitcoinProvider",
+          "FordefiProviders.UtxoProvider",
+          "WalletConnectProvider",
+        ],
+      });
+      if (isClientSide()) {
         window.location.reload();
-      },
-      userSession,
-    });
+      }
+    } catch (error) {
+      console.error("Error connecting to wallet:", error);
+    }
   };
 
-  const logout = () => {
-    userSession.signUserOut("/");
+  const logout = async () => {
+    setIsLoggingOut(true);
+    try {
+      await disconnect();
+    } catch (error) {
+      console.error("Error disconnecting:", error);
+    } finally {
+      setIsLoggingOut(false);
+    }
   };
 
   return (
     <AuthContext.Provider
       value={{
         user,
-        userSession,
+        stxAddress: user?.stxAddress || null,
+        btcAddress: user?.btcAddress || null,
         network,
         btcNetwork,
-        stxAddress,
-        btcAddress,
         walletProvider,
-        isAuthenticated,
+        isAuthenticated: () => typeof window !== "undefined" && isConnected(),
+        isLoggingOut,
         login,
         logout,
       }}
@@ -118,4 +119,5 @@ const AuthContextProvider: React.FC<{
     </AuthContext.Provider>
   );
 };
+
 export default AuthContextProvider;

@@ -1,21 +1,19 @@
 "use client";
-import { Network } from "@/app/contexts/AuthContext";
 import {
   Dropdown,
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
 } from "@nextui-org/react";
-import { useNetwork } from "@/app/contexts/NetworkContext";
+import { useAuth } from "@/app/contexts/AuthContext";
 import { networkInfo } from "@/app/consts/network";
+import { useState, useEffect } from "react";
 
 export const NetworkDropdown = () => {
-  const { networksList } = useNetwork();
-
   return (
     <Dropdown
       closeOnSelect={true}
-      className="rounded-lg border-2 border-[#f5f5f5]"
+      className="rounded-lg border border-[#f5f5f5]"
     >
       <DropdownTrigger>
         <div>
@@ -23,47 +21,39 @@ export const NetworkDropdown = () => {
         </div>
       </DropdownTrigger>
       <DropdownMenu>
-        {networksList.map((network) => (
-          <DropdownItem key={network}>
-            <NetworkOption network={network} />
-          </DropdownItem>
-        ))}
+        <DropdownItem>
+          <NetworkInfoMessage />
+        </DropdownItem>
       </DropdownMenu>
     </Dropdown>
   );
 };
 
 export const SelectedNetwork: React.FC = () => {
-  const { network } = useNetwork();
+  const { network } = useAuth();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <div
       className="w-36 rounded-xl text-center bg-transparent p-2 border-1 border-black dark:border-white"
       style={{ cursor: "pointer" }}
     >
-      <div className="text-sm">{networkInfo[network].title}</div>
+      <div className="text-sm">
+        {mounted ? networkInfo[network].title : "Loading..."}
+      </div>
     </div>
   );
 };
 
-export const NetworkOption: React.FC<{ network: Network }> = ({ network }) => {
-  const { updateNetwork } = useNetwork();
-
+export const NetworkInfoMessage: React.FC = () => {
   return (
-    <div
-      className="text-center rounded-xl text-center bg-[#FA5512] p-1"
-      style={{ cursor: "pointer" }}
-      onClick={() => updateNetwork(network)}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          updateNetwork(network);
-        }
-      }}
-      role="button"
-      tabIndex={0}
-    >
-      <div className="text-md text-white">{networkInfo[network].title}</div>
-      <div className="text-xs text-white">{networkInfo[network].url}</div>
+    <div className="text-center p-3">
+      <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
+        Change network from wallet settings and connect again.
+      </div>
     </div>
   );
 };

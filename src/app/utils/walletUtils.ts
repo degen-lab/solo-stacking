@@ -1,3 +1,4 @@
+import { getLocalStorage, isConnected } from "@stacks/connect";
 import { Network } from "../contexts/AuthContext";
 
 export const getShortestAddress = (
@@ -34,4 +35,23 @@ export const explorerAddressUrl = (
   if (network === "nakamoto-testnet")
     return `https://explorer.hiro.so/address/${address}?chain=testnet&api=https://api.nakamoto.testnet.hiro.so`;
   else return `https://explorer.hiro.so/address/${address}?chain=${network}`;
+};
+
+export const getUserAddress = () => {
+  if (!isConnected()) return null;
+  const storage = getLocalStorage();
+  if (!storage?.addresses?.stx?.[0]?.address) return null;
+  return storage.addresses.stx[0].address as string;
+};
+
+export const getUserBtcAddress = () => {
+  if (!isConnected()) return null;
+  const storage = getLocalStorage();
+  if (!storage?.addresses?.btc?.[0]?.address) return null;
+  return storage.addresses.btc[0].address as string;
+};
+
+export const detectNetworkFromAddress = (address: string | null): Network => {
+  if (!address) return "mainnet";
+  return address.startsWith("ST") ? "testnet" : "mainnet";
 };

@@ -34,7 +34,8 @@ export interface NavbarItem {
 export const NavbarSoloStacking = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { resolvedTheme: theme } = useTheme();
-  const { isAuthenticated, login, logout } = useContext(AuthContext);
+  const { isAuthenticated, login, logout, isLoggingOut } =
+    useContext(AuthContext);
 
   return (
     <Navbar className="p-0 m-0" onMenuOpenChange={setIsMenuOpen}>
@@ -67,16 +68,15 @@ export const NavbarSoloStacking = () => {
 
       <NavbarContent
         justify="end"
-        className={
-          theme === "dark"
-            ? "fill-white lg:hidden p-0"
-            : "fill-black lg:hidden p-0"
-        }
+        className="lg:hidden p-0"
+        suppressHydrationWarning
       >
-        <NavbarMenuToggle
-          icon={isMenuOpen ? "x" : "≡"}
-          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-        ></NavbarMenuToggle>
+        <div className={theme === "dark" ? "fill-white" : "fill-black"}>
+          <NavbarMenuToggle
+            icon={isMenuOpen ? "x" : "≡"}
+            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+          />
+        </div>
       </NavbarContent>
 
       <NavbarMenu className="text-center">
@@ -109,8 +109,13 @@ export const NavbarSoloStacking = () => {
         <Divider className="mb-4" />
         <NavbarMenuItem className="mb-4">
           {isAuthenticated() ? (
-            <Button color="primary" variant="ghost" onClick={logout}>
-              Logout
+            <Button
+              color="primary"
+              variant="ghost"
+              onClick={logout}
+              isLoading={isLoggingOut}
+            >
+              {isLoggingOut ? "Disconnecting..." : "Logout"}
             </Button>
           ) : (
             <Button color="primary" variant="ghost" onClick={() => login()}>
